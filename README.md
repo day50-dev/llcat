@@ -1,5 +1,7 @@
 # /usr/bin/cat for LLMs
-**llcat** is an unambitious dumb program. That's why it's great!
+**llcat** is the unambitious dumb program for LLM i/o. 
+
+That's why it's great!
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 

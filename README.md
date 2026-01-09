@@ -9,17 +9,17 @@ You can handle this!
 
 **llcat** solves all your problems. Yes, all of them! 
 
-It also has the following features:
+You can also:
 
  * Pipe things into it or prompt it on the command line.
- * **Conversation history** is an optional file. 
- * **Tool Calling** is done by using the toolcalling OpenAI spec. There's a file and a progrma example
+ * **Conversation history** as an optional file. 
+ * **Tool Calling** with the OpenAI spec. There's a file and a program example in this repository.
  * Servers: 
     * `OPENAI_API_BASE` and `LLM_BASE_URL` are supported along with -s for one off.
     * **Authentication tokens** are passed with -k. You can do `$(< somefile)` or whatever obfuscation you want, that's on you.
  * **Models** are listed with the `-m` option and specified with it as well.
 
-Here's some things you can do
+Want it?
 
  * pipx install llcat
  * uv tool run llcat

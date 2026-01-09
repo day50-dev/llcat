@@ -1,0 +1,30 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "list_mp3s",
+      "description": "List all MP3 files in the music library",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "play_mp3",
+      "description": "Play a specific MP3 file from the library",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "The name of the MP3 file to play"
+          }
+        },
+        "required": ["filename"]
+      }
+    }
+  }
+]

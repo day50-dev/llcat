@@ -15,7 +15,39 @@ Here's some things you can do
  * pipx install llcat
  * uv tool run llcat
 
+## Examples
 
+**Start with Openrouter**
+
+Listing the models on openrouter
+
+`llmcat -s https://openrouter.ai/api -m`
+
+Choosing one that doing a basic query:
+
+```
+$ llcat -s https://openrouter.ai/api \
+        -m meta-llama/llama-3.2-3b-instruct:free \
+        -c /tmp/convo.txt \
+        -k $(cat openrouter.key) \
+        "What is the capital of France?"
+
+$ llcat -s https://openrouter.ai/api \
+        -m meta-llama/llama-3.2-3b-instruct:free \
+        -c /tmp/convo.txt \
+        -k $(cat openrouter.key) \
+        "And what about Canada?"
+```
+
+**Let's continue it locally**
+
+```
+$ llcat -s http://192.168.1.21:8080 \
+        -c /tmp/convo.txt \
+        "And what about Japan?"
+```
+
+## Full documentation
 
 ```shell
 usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]

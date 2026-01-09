@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, requests, os, json, argparse, subprocess
+import sys, requests, os, json, argparse, subprocess, select
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-c', '--conversation', help='Conversation history file')
@@ -11,44 +11,44 @@ parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls
 parser.add_argument('prompt', nargs='*', help='Your prompt')
 args = parser.parse_args()
 
-# Determine base URL with priority: -s flag > env var > error
 if args.server:
     base_url = args.server.rstrip('/') + '/v1'
 elif os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL'):
     base_url = os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL')
 else:
+    parser.print_help()
     print("Error: No server specified. Use -s <server> or set OPENAI_API_BASE/LLM_BASE_URL environment variable.", file=sys.stderr)
     sys.exit(1)
 
-# Build headers
 headers = {'Content-Type': 'application/json'}
 if args.key:
     headers['Authorization'] = f'Bearer {args.key}'
 
-# Handle -m with no value: list models
 if args.model == '':
     r = requests.get(f'{base_url}/models', headers=headers)
-    models = r.json()
-    for model in models.get('data', []):
-        print(model['id'])
+    try:
+        models = r.json()
+        for model in models.get('data', []):
+            print(model['id'])
+    except:
+        print(f"{r.text}\n\nError Parsing JSON")
     sys.exit(0)
 
-# Read prompt from args or stdin
-if args.prompt:
-    prompt = ' '.join(args.prompt)
-else:
-    prompt = sys.stdin.read()
+cli_prompt = ' '.join(args.prompt) if args.prompt else ''
+stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
 
-# Load conversation history if provided
+if len(stdin_prompt) and len(cli_prompt):
+    prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}"
+else:
+    prompt = cli_prompt + stdin_prompt
+
 messages = []
 if args.conversation and os.path.exists(args.conversation):
     with open(args.conversation, 'r') as f:
         messages = json.load(f)
 
-# Add new user message
 messages.append({'role': 'user', 'content': prompt})
 
-# Load tools if provided
 tools = None
 if args.tool_file:
     with open(args.tool_file, 'r') as f:
@@ -104,7 +104,6 @@ for line in r.iter_lines():
 
 print()
 
-# Execute tool calls if we have both tool_program and tool_calls
 if args.tool_program and tool_calls:
     for tool_call in tool_calls:
         tool_input = json.dumps({
@@ -123,7 +122,6 @@ if args.tool_program and tool_calls:
             shell=True
         )
         
-        # Add tool call and result to messages
         messages.append({
             'role': 'assistant',
             'content': assistant_response if assistant_response else None,
@@ -135,7 +133,6 @@ if args.tool_program and tool_calls:
             'content': result.stdout
         })
     
-    # Make another request with tool results
     req = {'messages': messages, 'stream': True}
     if args.model:
         req['model'] = args.model
@@ -162,7 +159,6 @@ if args.tool_program and tool_calls:
                     pass
     print()
 
-# Save conversation history
 if args.conversation:
     messages.append({'role': 'assistant', 'content': assistant_response})
     with open(args.conversation, 'w') as f:

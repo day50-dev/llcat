@@ -36,43 +36,47 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-Go ahead, do that right now.
+Go ahead, do that one right now. I'll wait.
 
+Let's start with llama:
 ```
 $ llcat -s https://openrouter.ai/api \
         -m meta-llama/llama-3.2-3b-instruct:free \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
         "What is the capital of France?"
+```
 
+Continue with Qwen:
+```
 $ llcat -s https://openrouter.ai/api \
-        -m meta-llama/llama-3.2-3b-instruct:free \
+        -m qwen/qwen3-4b:free \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
         "And what about Canada?"
 ```
 
-**Let's continue it locally**
-
+And finish on the local network:
 ```
 $ llcat -s http://192.168.1.21:8080 \
         -c /tmp/convo.txt \
         "And what about Japan?"
 ```
+One conversation, hopping across models and servers.
 
 Pure sorcery.
+
+## More convenient summoning
 
 Want to store state? Let's go!
 ```shell
 $ source fancy.sh
-...
+$ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-What goes in the `...`? 
+Now go read the four lines of `fancy.sh`. Surprise! It's just an example.
 
-You'll have to read the four lines of `fancy.sh`! 
-
-*(Spoiler Alert: it sets environment variables and has a wrapper function)*
+*(Spoiler Alert: environment variables and a wrapper function)*
 
 
 ## The Tool Call To Rule Them All

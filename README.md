@@ -1,7 +1,7 @@
 # /usr/bin/cat for LLMs
-**llcat** is an LLM program with very little ambition in life. 
+**llcat** is an LLM program with very little ambition. 
 
-That's what makes it useful. 
+That's why it's awesome.
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 

@@ -1,5 +1,5 @@
 # /usr/bin/cat for LLMs
-**llcat** is an LLM program with very little ambition. 
+**llcat** is a dumb program with very little ambition. 
 
 That's why it's awesome.
 

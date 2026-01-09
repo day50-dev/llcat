@@ -62,12 +62,11 @@ $ llcat -s http://192.168.1.21:8080 \
 
 Pure sorcery.
 
-Want to be fancy? There's an example here as well.
-
+Want to be fancy? Let's go!
 ```shell
 $ source fancy.sh
 ```
-But don't just do it. Read that file. 
+But don't just do that. Read the file. Modify it. That's the point.
 
 
 ## The Tool Call To Rule Them All

@@ -119,7 +119,8 @@ options:
 ### Wait! What about conversations?
 
 Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/conversation.sh). 
-It even has inspectable tool calls. Realtime Observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
+
+It even has inspectable tool calls and realtime observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
 
 <img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 

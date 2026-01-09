@@ -13,7 +13,7 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-If you've got 0.3 seconds to spare, go ahead and run that one right now. 
+Got 0.3 seconds to spare? Run that right now. 
 
 I'll wait.
 

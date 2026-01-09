@@ -28,13 +28,11 @@ There's no *requirements.txt*? That's right.
 
 ## Examples
 
-**We start with Openrouter**
-
-Listing the models on openrouter
+List the models on openrouter
 
 `llmcat -s https://openrouter.ai/api -m`
 
-You can run that, unauthenticated, no problem.
+Go ahead, you can run that, unauthenticated, no problem.
 
 ```
 $ llcat -s https://openrouter.ai/api \

@@ -26,6 +26,8 @@ Free Samples? Sure! It's Free Software.
  * pipx install llcat
  * uvx llcat
 
+It's **llcat**, not **llmcat**. Let's keep it pronounceable.
+
 Dependencies? Just the requests library.
 
 Pretty unambitious. Pretty nice.
@@ -62,7 +64,7 @@ $ llcat -s http://192.168.1.21:8080 \
 
 Pure sorcery.
 
-Want to be fancy? Store state? Let's go!
+Want to store state? Let's go!
 ```shell
 $ source fancy.sh
 ...

@@ -36,7 +36,7 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-Go ahead, do that right now.
+Go ahead, do that one right now.
 
 ```
 $ llcat -s https://openrouter.ai/api \
@@ -44,21 +44,25 @@ $ llcat -s https://openrouter.ai/api \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
         "What is the capital of France?"
+```
+**Let's continue, and change the model:**
 
+```
 $ llcat -s https://openrouter.ai/api \
-        -m meta-llama/llama-3.2-3b-instruct:free \
+        -m qwen/qwen3-4b:free \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
         "And what about Canada?"
 ```
 
-**Let's continue it locally**
+**And this time, the server:**
 
 ```
 $ llcat -s http://192.168.1.21:8080 \
         -c /tmp/convo.txt \
         "And what about Japan?"
 ```
+One conversation, hopping across models and servers.
 
 Pure sorcery.
 

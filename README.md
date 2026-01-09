@@ -73,7 +73,7 @@ It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](ht
 
 The enterprise applications are limitless...
 
-## Full documentation
+## Boring Documentation
 
 ```shell
 usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]

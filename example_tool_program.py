@@ -13,7 +13,7 @@ if tool_name == "list_mp3s":
 
 elif tool_name == "play_mp3":
     filename = args['filename']
-    subprocess.Popen(['mpv', Path(args.get('path') or '.').expanduser() / filename])
+    subprocess.Popen(['mpv', '--quiet', Path(args.get('path') or '.').expanduser() / filename])
     print(json.dumps({"status": "playing", "file": filename}))
 
 else:

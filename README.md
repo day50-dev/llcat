@@ -26,7 +26,7 @@ Want it?
  * pipx install llcat
  * uvx llcat
 
-Dependencies? Just the requests library. That's it. 
+Dependencies? Just the requests library.
 
 Pretty unambitious. Pretty nice.
 

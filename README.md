@@ -5,7 +5,9 @@ That's what makes it useful.
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 
-You can handle this! It solves all your problems: Makes you look 10 pounds thinner, 5 years younger and fixes your receding hairline. 
+You can handle this! 
+
+**llcat** solves all your problems, makes you 10 pounds thinner, 5 years younger and fixes your receding hairline. 
 
 It also has the following features:
 

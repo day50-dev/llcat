@@ -54,7 +54,6 @@ if args.tool_file:
     with open(args.tool_file, 'r') as f:
         tools = json.load(f)
 
-# Build request
 req = {'messages': messages, 'stream': True}
 if args.model:
     req['model'] = args.model
@@ -77,14 +76,11 @@ for line in r.iter_lines():
             try:
                 chunk = json.loads(data)
                 delta = chunk['choices'][0]['delta']
-                
-                # Handle text content
                 content = delta.get('content', '')
                 if content:
                     print(content, end='', flush=True)
                     assistant_response += content
                 
-                # Handle tool calls
                 if 'tool_calls' in delta:
                     for tc in delta['tool_calls']:
                         idx = tc.get('index', 0)

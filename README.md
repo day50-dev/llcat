@@ -93,7 +93,7 @@ It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](ht
 
 The enterprise applications are limitless...
 
-### What about conversations?
+## Conversant Conversations?
 
 Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/conversation.sh). 
 

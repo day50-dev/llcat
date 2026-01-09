@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
 
     if args.server:
-        base_url = args.server.rstrip('/') + '/v1'
+        base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
     else:
         parser.print_help()
         print("Error: No server specified. Use -s <server> or set OPENAI_API_BASE/LLM_BASE_URL environment variable.", file=sys.stderr)

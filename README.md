@@ -58,6 +58,15 @@ $ llcat -s http://192.168.1.21:8080 \
 
 Pure sorcery.
 
+Want to be fancy? There's an example here as well.
+
+```shell
+$ source fancy.sh
+```
+
+But really, you should read the file.
+
+
 ## The Tool Call To Rule Them All
 This uses the sophisticated 21 line `example_tool_program.py` included in this repository.
 

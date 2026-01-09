@@ -36,8 +36,9 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-Go ahead, do that one right now.
+Go ahead, do that one right now. I'll wait.
 
+Let's start with llama:
 ```
 $ llcat -s https://openrouter.ai/api \
         -m meta-llama/llama-3.2-3b-instruct:free \
@@ -45,8 +46,8 @@ $ llcat -s https://openrouter.ai/api \
         -k $(cat openrouter.key) \
         "What is the capital of France?"
 ```
-Let's continue but change the model:
 
+Continue with Qwen:
 ```
 $ llcat -s https://openrouter.ai/api \
         -m qwen/qwen3-4b:free \
@@ -55,8 +56,7 @@ $ llcat -s https://openrouter.ai/api \
         "And what about Canada?"
 ```
 
-And now, the server:
-
+And finish on the local network:
 ```
 $ llcat -s http://192.168.1.21:8080 \
         -c /tmp/convo.txt \

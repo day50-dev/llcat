@@ -45,7 +45,7 @@ $ llcat -s https://openrouter.ai/api \
         -k $(cat openrouter.key) \
         "What is the capital of France?"
 ```
-**Let's continue, and change the model:**
+Let's continue but change the model:
 
 ```
 $ llcat -s https://openrouter.ai/api \
@@ -55,7 +55,7 @@ $ llcat -s https://openrouter.ai/api \
         "And what about Canada?"
 ```
 
-**And this time, the server:**
+And now, the server:
 
 ```
 $ llcat -s http://192.168.1.21:8080 \

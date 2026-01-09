@@ -77,7 +77,7 @@ $ source examples/fancy.sh
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-Now go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/examples/fancy.sh)
+Go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/examples/fancy.sh)
 
 Surprise! Environment variables and a wrapper function. That's all you need.
 

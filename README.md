@@ -24,7 +24,7 @@ Want it?
  * pipx install llcat
  * uv tool run llcat
 
-There's no *requirements.txt*? That's right. 
+Dependency? Just the requests library. That's it.
 
 ## Examples
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "llcat"
-version = "0.1.0"
+version = "0.2.0"
 description = "/usr/bin/cat for the LLM era"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -27,6 +27,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
+    "requests"
 ]
 
 [project.urls]

@@ -107,7 +107,7 @@ def main():
                 'arguments': json.loads(tool_call['function']['arguments'])
             })
             
-            print(f"<Executing: {tool_call['function']['name']}>", file=sys.stderr)
+            print(f"<Executing: {tool_call['function']['name']}({tool_call['function']['arguments']})>", file=sys.stderr)
             
             result = subprocess.run(
                 args.tool_program,

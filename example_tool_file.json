@@ -9,7 +9,7 @@
         "properties": {
           "path": {
             "type": "string",
-            "description": "An optional path to search for files, otherwise ."
+            "description": "An optional path to search for files, otherwise cwd"
           }
         }
       }
@@ -19,13 +19,17 @@
     "type": "function",
     "function": {
       "name": "play_mp3",
-      "description": "Play a specific MP3 file from the library",
+      "description": "Play a specific MP3 file from the library. Remember to pass the path if necessary",
       "parameters": {
         "type": "object",
         "properties": {
           "filename": {
             "type": "string",
             "description": "The name of the MP3 file to play"
+          },
+          "path": {
+            "type": "string",
+            "description": "An optional path to search for files, otherwise cwd"
           }
         },
         "required": ["filename"]

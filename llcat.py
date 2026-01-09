@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, requests, os, json, argparse, subprocess, select
+import sys, requests, json, argparse, subprocess, select
 
 def safecall(base_url, req, headers):
     try:
@@ -56,6 +56,7 @@ def main():
             print(f"{r.text}\n\nError Parsing JSON")
         sys.exit(0)
 
+    import os
     messages = []
     if args.conversation and os.path.exists(args.conversation):
         with open(args.conversation, 'r') as f:

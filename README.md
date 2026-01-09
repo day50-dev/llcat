@@ -30,7 +30,7 @@ There's no *requirements.txt*? That's right.
 
 List the models on openrouter
 
-`llmcat -s https://openrouter.ai/api -m`
+`llcat -s https://openrouter.ai/api -m`
 
 Go ahead, you can run that, unauthenticated, no problem.
 

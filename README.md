@@ -1,6 +1,5 @@
 # /usr/bin/cat for LLMs
-
-<img width="704" height="591" alt="llcat" src="https://github.com/user-attachments/assets/6d93b551-9eb4-4aef-8d0f-d43d6248623a" />
+<img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 
 **llcat** is an llm program with very little ambition, and that's what makes it useful. 
 There's a lot of tricked out bling cli tools out there with things like plugin systems and databases but what about the `/usr/bin/cat`?

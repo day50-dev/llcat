@@ -32,7 +32,7 @@ Pretty unambitious. Pretty nice.
 
 ## Examples
 
-List the models on openrouter
+List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 

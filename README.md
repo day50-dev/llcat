@@ -59,11 +59,13 @@ $ llcat -s http://192.168.1.21:8080 \
 Pure sorcery.
 
 ## The Tool Call To Rule Them All
-This uses the sophisticated 21 lines `example_tool_program.py` included in this directory, if you can manage to comprehend it!
+This uses the sophisticated 21 line `example_tool_program.py` included in this repository.
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
-[Kablam!](https://frustratedfunk.bandcamp.com/track/photographic-photogenic) Alright **a16z** where's my $50 million? The enterprise applications are limitless!
+[Kablam!](https://frustratedfunk.bandcamp.com/track/photographic-photogenic) Alright **a16z** where's my $50 million? 
+
+The enterprise applications are limitless...
 
 ## Full documentation
 

@@ -7,6 +7,12 @@ That's why it's awesome.
 
 You can handle this! 
 
+List the models on [OpenRouter](https://openrouter.ai):
+
+`uvx llcat -s https://openrouter.ai/api -m`
+
+Go ahead, do that one right now. I'll wait.
+
 **llcat** solves all your problems. 
 
 Yes. Every one. 
@@ -14,7 +20,7 @@ Yes. Every one.
 It can also:
 
  * Pipe things from stdin and/or be prompted on the command line.
- * Store **conversation history** optionally, in a normal file. 
+ * Store **conversation history** optionally, as a boring JSON file. 
  * Do **tool calling** using the OpenAI spec. There's an example in this repository (and below).
  * Use local or remote servers, authenticated or not.
  * List **models** using `-m` without arguments. Specify a model with the argument.
@@ -31,12 +37,6 @@ Dependencies? Just the requests library.
 Pretty unambitious. Pretty nice.
 
 ## Examples
-
-List the models on [OpenRouter](https://openrouter.ai):
-
-`uvx llcat -s https://openrouter.ai/api -m`
-
-Go ahead, do that one right now. I'll wait.
 
 Let's start with llama:
 ```

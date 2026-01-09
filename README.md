@@ -14,8 +14,8 @@ Yes. Every one.
 It can also:
 
  * Pipe things from stdin and/or be prompted on the command line.
- * Have **Conversation history** optionally, in a normal file. 
- * Do **Tool Calling** with the OpenAI spec. There's a file and a program example in this repository.
+ * Store **conversation history** optionally, in a normal file. 
+ * Do **tool calling** using the OpenAI spec. There's an example in this repository (and below).
  * Contact servers through a variety of ways: 
     * `OPENAI_API_BASE` and `LLM_BASE_URL` are supported along with -s for one off.
     * **Authentication tokens** are passed with -k. You can do `$(< somefile)` or whatever obfuscation you want, that's on you.

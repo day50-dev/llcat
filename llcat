@@ -23,7 +23,15 @@ def main():
     if args.key:
         headers['Authorization'] = f'Bearer {args.key}'
 
-    if args.model == '':
+    cli_prompt = ' '.join(args.prompt) if args.prompt else ''
+    stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
+
+    if len(stdin_prompt) and len(cli_prompt):
+        prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}"
+    else:
+        prompt = cli_prompt + stdin_prompt
+
+    if args.model == '' and len(prompt) == 0:
         r = requests.get(f'{base_url}/models', headers=headers)
         try:
             models = r.json()
@@ -32,14 +40,6 @@ def main():
         except:
             print(f"{r.text}\n\nError Parsing JSON")
         sys.exit(0)
-
-    cli_prompt = ' '.join(args.prompt) if args.prompt else ''
-    stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
-
-    if len(stdin_prompt) and len(cli_prompt):
-        prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}"
-    else:
-        prompt = cli_prompt + stdin_prompt
 
     messages = []
     if args.conversation and os.path.exists(args.conversation):

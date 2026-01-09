@@ -85,9 +85,9 @@ Surprise! Environment variables and a wrapper function. That's all you need.
 
 
 ## The Tool Call To Rule Them All
-This example, a very strange way to play mp3s, uses the [sophisticated 21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository.
+This example, a very strange way to play mp3s, uses the [sophisticated 21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. Some people call it MCP, `llcat` calls it `subprocess.run`.
 
-It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
+This demo also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
@@ -102,7 +102,6 @@ Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/
 It even has inspectable tool calls and realtime observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
 
 <img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
-
 
 ### Boring Documentation
 

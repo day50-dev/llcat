@@ -66,17 +66,17 @@ One conversation, hopping across models and servers.
 
 Pure sorcery.
 
+## More convenient summoning
+
 Want to store state? Let's go!
 ```shell
 $ source fancy.sh
-...
+$ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-What goes in the `...`? 
+Now go read the four lines of `fancy.sh`. Surprise! It's just an example.
 
-You'll have to read the four lines of `fancy.sh`! 
-
-*(Spoiler Alert: it sets environment variables and has a wrapper function)*
+*(Spoiler Alert: environment variables and a wrapper function)*
 
 
 ## The Tool Call To Rule Them All

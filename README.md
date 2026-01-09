@@ -63,7 +63,7 @@ $ llcat -s http://192.168.1.21:8080 \
 Pure sorcery.
 
 ## The Tool Call To Rule Them All
-This uses the sophisticated 21 line `example_tool_program.py` included in this repository.
+This example, a very strange way to play mp3s, uses the sophisticated 21 line `example_tool_program.py` included in this repository.
 
 It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
 

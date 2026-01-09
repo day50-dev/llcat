@@ -14,8 +14,6 @@ def main():
 
     if args.server:
         base_url = args.server.rstrip('/') + '/v1'
-    elif os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL'):
-        base_url = os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL')
     else:
         parser.print_help()
         print("Error: No server specified. Use -s <server> or set OPENAI_API_BASE/LLM_BASE_URL environment variable.", file=sys.stderr)

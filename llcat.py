@@ -59,7 +59,15 @@ def main():
     messages = []
     if args.conversation and os.path.exists(args.conversation):
         with open(args.conversation, 'r') as f:
-            messages = json.load(f)
+            try:
+                messages = json.load(f)
+            except Exception as ex:
+                # If it's an empty file, proceed
+                if len(f.read(10)) == 0:
+                    messages = []
+                else:
+                    print(f"Error: {args.conversation} is unparsable JSON (Err: {ex}). Go check that.")
+                    sys.exit(1)
 
     messages.append({'role': 'user', 'content': prompt})
 
@@ -120,7 +128,7 @@ def main():
                 'arguments': json.loads(tool_call['function']['arguments'])
             })
             
-            print(f"<Executing: {tool_call['function']['name']}({tool_call['function']['arguments']})>", file=sys.stderr)
+            print(f"> *Executing: {tool_call['function']['name']}({tool_call['function']['arguments']})*", file=sys.stderr)
             
             result = subprocess.run(
                 args.tool_program,
@@ -129,7 +137,7 @@ def main():
                 text=True,
                 shell=True
             )
-            print(f"<Result: {result}>", file=sys.stderr)
+            print(f"> *Result: {result}*", file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',

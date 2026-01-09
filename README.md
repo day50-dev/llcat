@@ -118,4 +118,4 @@ options:
 
 ```
 
-**DA`/50**: Making the future obvious.
+Brought to you by **DA`/50**: Make the future obvious.

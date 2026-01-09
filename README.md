@@ -56,6 +56,8 @@ $ llcat -s http://192.168.1.21:8080 \
         "And what about Japan?"
 ```
 
+Pure sorcery.
+
 ## Full documentation
 
 ```shell

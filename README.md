@@ -22,7 +22,7 @@ You can also:
 Want it?
 
  * pipx install llcat
- * uv tool run llcat
+ * uvx llcat
 
 Dependency? Just the requests library. That's it.
 

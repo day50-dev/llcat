@@ -1,7 +1,5 @@
 # /usr/bin/cat for LLMs
-**llcat** is a dumb program with very little ambition. 
-
-That's why it's awesome.
+**llcat** is an unambitious little program and that's why it's awesome.
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 

@@ -1,2 +1,6 @@
 dist/
 *.txt
+__pycache__/
+.direnv/
+.envrc
+llcat.egg-info/

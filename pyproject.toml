@@ -1,14 +1,14 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "llcat"
-version = "0.4.0"
-description = "/usr/bin/cat for the LLM era"
+version = "0.6.0"
+description = "/usr/bin/cat for LLMs"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "Chris McKenzie", email = "kristopolous@yahoo.com"},
 ]
@@ -17,7 +17,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -34,13 +33,9 @@ dependencies = [
 "Homepage" = "https://github.com/day50-dev/llcat"
 "Bug Tracker" = "https://github.com/day50-dev/llcat/issues"
 
+[tool.setuptools]
+py-modules = ["llcat"]
+
 [project.scripts]
-streamdown = "llcat:main"
-sd = "llcat:main"
-
-[tool.hatch.build.targets.wheel]
-packages = ["llcat"]
-include = ["llcat"]
-exclude = ["venv", "dist", ".git"] 
-
+llcat = "llcat:main"
 

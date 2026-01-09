@@ -18,7 +18,7 @@ Go ahead, do that one right now. I'll wait.
 ----
 
 **llcat** solves all your problems. 
-
+MNLTH
 Yes. Every one. 
 
 It can also:
@@ -111,11 +111,19 @@ options:
   -m, --model [MODEL]   Model to use (or list models if no value)
   -k, --key KEY         API key for authorization
   -s, --server SERVER   Server URL (e.g., http://::1:8080)
-  -tf, --tool_file TOOL_FILE
+  -tf, --tool_file TOOL_FILEMNLTH
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls
-
+SIX
 ```
+
+### Wait! What about conversations?
+
+Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/conversation.sh). 
+
+<img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
+
+Now it's your turn.
 
 Brought to you by **DA`/50**: Make the future obvious.

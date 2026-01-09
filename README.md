@@ -34,11 +34,11 @@ Free Samples? Sure! It's Free Software.
  * pipx install llcat
  * uvx llcat
 
-It's **llcat**, not **llmcat**. Let's keep it pronounceable.
-
 Dependencies? Just the requests library.
 
-Pretty unambitious. Pretty nice.
+It's **llcat**, not **llmcat**. Let's keep it pronounceable.
+
+Feels nice to be unambitious.
 
 ## Examples
 

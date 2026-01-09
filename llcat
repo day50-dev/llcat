@@ -160,6 +160,7 @@ if args.tool_program and tool_calls:
     print()
 
 if args.conversation:
-    messages.append({'role': 'assistant', 'content': assistant_response})
-    with open(args.conversation, 'w') as f:
-        json.dump(messages, f, indent=2)
+    if len(assistant_response):
+        messages.append({'role': 'assistant', 'content': assistant_response})
+        with open(args.conversation, 'w') as f:
+            json.dump(messages, f, indent=2)

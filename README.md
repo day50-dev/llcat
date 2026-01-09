@@ -1,4 +1,4 @@
-# Unix-style llm cat
+# /usr/bin/cat for llms
 **llcat** is an llm program with very little ambition, and that's what makes it useful. 
 There's a lot of tricked out bling cli tools out there with things like plugin systems and databases but what about the `/usr/bin/cat`?
 

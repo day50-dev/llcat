@@ -93,6 +93,15 @@ It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](ht
 
 The enterprise applications are limitless...
 
+### What about conversations?
+
+Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/conversation.sh). 
+
+It even has inspectable tool calls and realtime observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
+
+<img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
+
+
 ### Boring Documentation
 
 ```shell
@@ -115,14 +124,6 @@ options:
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls
 ```
-
-### Wait! What about conversations?
-
-Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/conversation.sh). 
-
-It even has inspectable tool calls and realtime observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
-
-<img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 
 Now it's your turn.
 

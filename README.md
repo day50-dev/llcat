@@ -1,38 +1,42 @@
 # /usr/bin/cat for LLMs
-**llcat** is an LLM program with very little ambition in life. 
+**llcat** is an LLM program with very little ambition. 
 
-That's what makes it useful. 
+That's why it's awesome.
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 
 You can handle this! 
 
-**llcat** solves all your problems. Yes, all of them! 
+**llcat** solves all your problems. 
 
-You can also:
+Yes. Every one. 
 
- * Pipe things into it or prompt it on the command line.
- * **Conversation history** as an optional file. 
- * **Tool Calling** with the OpenAI spec. There's a file and a program example in this repository.
- * Servers: 
+It can also:
+
+ * Pipe things from stdin and/or be prompted on the command line.
+ * Store **conversation history** optionally, in a normal file. 
+ * Do **tool calling** using the OpenAI spec. There's an example in this repository (and below).
+ * Contact servers through a variety of ways: 
     * `OPENAI_API_BASE` and `LLM_BASE_URL` are supported along with -s for one off.
     * **Authentication tokens** are passed with -k. You can do `$(< somefile)` or whatever obfuscation you want, that's on you.
- * **Models** are listed with the `-m` option and specified with it as well.
+ * List **models** using `-m` without arguments. Specify a model with the argument.
 
-Want it?
+Free Samples? Sure! It's Free Software.
 
  * pipx install llcat
  * uvx llcat
 
-Dependency? Just the requests library. That's it.
+Dependencies? Just the requests library.
+
+Pretty unambitious. Pretty nice.
 
 ## Examples
 
-List the models on openrouter
+List the models on [OpenRouter](https://openrouter.ai):
 
-`llcat -s https://openrouter.ai/api -m`
+`uvx llcat -s https://openrouter.ai/api -m`
 
-Go ahead, you can run that, unauthenticated, no problem.
+Go ahead, do that right now.
 
 ```
 $ llcat -s https://openrouter.ai/api \
@@ -68,7 +72,7 @@ But really, you should read the file.
 
 
 ## The Tool Call To Rule Them All
-This uses the sophisticated 21 line `example_tool_program.py` included in this repository.
+This example, a very strange way to play mp3s, uses the sophisticated 21 line `example_tool_program.py` included in this repository.
 
 It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
 
@@ -78,7 +82,7 @@ It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](ht
 
 The enterprise applications are limitless...
 
-## Full documentation
+### Boring Documentation
 
 ```shell
 usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]

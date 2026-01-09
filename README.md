@@ -85,7 +85,7 @@ Surprise! Environment variables and a wrapper function. That's all you need.
 
 
 ## The Tool Call To Rule Them All
-This example, a very strange way to play mp3s, uses the [sophisticated 21 line `example_tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository.
+This example, a very strange way to play mp3s, uses the [sophisticated 21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository.
 
 It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
 

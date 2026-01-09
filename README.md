@@ -67,8 +67,7 @@ Want to be fancy? There's an example here as well.
 ```shell
 $ source fancy.sh
 ```
-
-But really, you should read the file.
+But don't just do it. Read that file. 
 
 
 ## The Tool Call To Rule Them All

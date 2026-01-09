@@ -78,7 +78,7 @@ $ source fancy.sh
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-Now go read the four lines of `fancy.sh`. 
+Now go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/fancy.sh)
 
 Surprise! It's just an example. Environment variables and a wrapper function. That's all you need.
 
@@ -117,3 +117,5 @@ options:
                         Program to execute tool calls
 
 ```
+
+**DA`/50**: Making the future obvious.

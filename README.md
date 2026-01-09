@@ -61,6 +61,8 @@ Pure sorcery.
 ## The Tool Call To Rule Them All
 This uses the sophisticated 21 line `example_tool_program.py` included in this repository.
 
+It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
+
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
 [Kablam!](https://frustratedfunk.bandcamp.com/track/photographic-photogenic) Alright **a16z** where's my $50 million? 

@@ -7,24 +7,28 @@ That's why it's awesome.
 
 You can handle this! 
 
-**llcat** solves all your problems. Yes, all of them! 
+**llcat** solves all your problems. 
 
-You can also:
+Yes. Every one. 
 
- * Pipe things into it or prompt it on the command line.
- * **Conversation history** as an optional file. 
- * **Tool Calling** with the OpenAI spec. There's a file and a program example in this repository.
- * Servers: 
+It can also:
+
+ * Pipe things from stdin and/or be prompted on the command line.
+ * Have **Conversation history** optionally, in a normal file. 
+ * Do **Tool Calling** with the OpenAI spec. There's a file and a program example in this repository.
+ * Contact servers through a variety of ways: 
     * `OPENAI_API_BASE` and `LLM_BASE_URL` are supported along with -s for one off.
     * **Authentication tokens** are passed with -k. You can do `$(< somefile)` or whatever obfuscation you want, that's on you.
- * **Models** are listed with the `-m` option and specified with it as well.
+ * List **Models** with `-m` option without arguments and specify the model, with arguments.
 
 Want it?
 
  * pipx install llcat
  * uvx llcat
 
-Dependency? Just the requests library. That's it.
+Dependencies? Just the requests library. That's it. 
+
+Pretty unambitious. Pretty nice.
 
 ## Examples
 

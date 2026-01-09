@@ -1,8 +1,11 @@
-# /usr/bin/cat for llms
+# /usr/bin/cat for LLMs
+
+<img width="704" height="591" alt="llcat" src="https://github.com/user-attachments/assets/6d93b551-9eb4-4aef-8d0f-d43d6248623a" />
+
 **llcat** is an llm program with very little ambition, and that's what makes it useful. 
 There's a lot of tricked out bling cli tools out there with things like plugin systems and databases but what about the `/usr/bin/cat`?
 
- * You can pipe things into it or talk to it on the command line, like most others.
+ * You can pipe things into it or prompt it on the command line.
  * **Conversation history** is just a file you can optionally provide. If you don't then there's no conversation saved.
  * **Tool Calling** is done by using the toolcalling OpenAI spec. There's a file and a progrma example
  * 3rd party services & local: 

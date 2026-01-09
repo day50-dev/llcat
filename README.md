@@ -123,7 +123,7 @@ options:
   -m, --model [MODEL]   Model to use (or list models if no value)
   -k, --key KEY         API key for authorization
   -s, --server SERVER   Server URL (e.g., http://::1:8080)
-  -tf, --tool_file TOOL_FILEMNLTH
+  -tf, --tool_file TOOL_FILE
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls

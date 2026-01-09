@@ -1,5 +1,5 @@
 # /usr/bin/cat for LLMs
-**llcat** is the unambitious dumb program for LLM i/o. 
+**llcat** is an unambitious dumb program for LLM I/O. 
 
 That's why it's great!
 

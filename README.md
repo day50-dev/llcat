@@ -8,12 +8,13 @@ That's why it's awesome.
 You can handle this! 
 
 ## Very Quick Start
+Got 0.3 seconds to spare?
 
 List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-Got 0.3 seconds to spare? Run that right now. 
+Run that right now. 
 
 I'll wait.
 

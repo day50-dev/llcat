@@ -7,7 +7,7 @@ That's what makes it useful.
 
 You can handle this! 
 
-**llcat** solves all your problems, makes you 10 pounds thinner, 5 years younger and fixes your receding hairline. 
+**llcat** solves all your problems. Yes, all of them! 
 
 It also has the following features:
 

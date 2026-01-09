@@ -70,7 +70,7 @@ One conversation, hopping across models and servers.
 
 Pure sorcery.
 
-## More convenient summoning
+## Summon Some More
 
 Want to store state? Let's go!
 ```shell

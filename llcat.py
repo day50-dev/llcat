@@ -1,6 +1,21 @@
 #!/usr/bin/env python3
 import sys, requests, os, json, argparse, subprocess, select
 
+def safecall(base_url, req, headers):
+    try:
+        r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+        r.raise_for_status()  
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}", file=sys.stderr)
+        if hasattr(e, 'response') and e.response is not None:
+            try:
+                error_data = e.response.json()
+                print(f"Request: {json.dumps(req,indent=2)}\nResponse: {json.dumps(error_data, indent=2)}", file=sys.stderr)
+            except:
+                print(f"Server response: {e.response.text}", file=sys.stderr)
+        sys.exit(1)
+    return r
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--conversation', help='Conversation history file')
@@ -59,7 +74,7 @@ def main():
     if tools:
         req['tools'] = tools
 
-    r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+    r = safecall(base_url,req,headers)
 
     assistant_response = ''
     tool_calls = []
@@ -133,8 +148,8 @@ def main():
         if tools:
             req['tools'] = tools
         
-        r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
-        
+        r = safecall(base_url,req,headers)
+
         assistant_response = ''
         for line in r.iter_lines():
             if line:

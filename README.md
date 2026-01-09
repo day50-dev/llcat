@@ -41,7 +41,7 @@ Dependencies? Just the requests library.
 
 ## Examples
 
-Start with llama:
+Start a chat with llama:
 ```
 $ llcat -s https://openrouter.ai/api \
         -m meta-llama/llama-3.2-3b-instruct:free \

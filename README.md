@@ -77,7 +77,7 @@ Pure sorcery.
 
 Want to store state? Let's go!
 ```shell
-$ source fancy.sh
+$ source examples/fancy.sh
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```

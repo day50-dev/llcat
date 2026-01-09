@@ -82,7 +82,7 @@ $ llc "write a diss track where the knapsack problem hates on the towers of hano
 ```
 Now go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/fancy.sh)
 
-Surprise! It's just an example. Environment variables and a wrapper function. That's all you need.
+Surprise! Environment variables and a wrapper function. That's all you need.
 
 
 ## The Tool Call To Rule Them All

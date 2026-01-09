@@ -18,7 +18,6 @@ Go ahead, do that one right now. I'll wait.
 ----
 
 **llcat** solves all your problems. 
-MNLTH
 Yes. Every one. 
 
 It can also:
@@ -115,7 +114,6 @@ options:
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls
-SIX
 ```
 
 ### Wait! What about conversations?

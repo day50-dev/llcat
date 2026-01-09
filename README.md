@@ -62,11 +62,17 @@ $ llcat -s http://192.168.1.21:8080 \
 
 Pure sorcery.
 
-Want to be fancy? Let's go!
+Want to be fancy? Store state? Let's go!
 ```shell
 $ source fancy.sh
+...
+$ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-But don't just do that. Read the file. Modify it. That's the point.
+What goes in the `...`? 
+
+You'll have to read the four lines of `fancy.sh`! 
+
+*(Spoiler Alert: it sets environment variables and has a wrapper function)*
 
 
 ## The Tool Call To Rule Them All

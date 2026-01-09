@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llcat"
+version = "0.1.0"
+description = "/usr/bin/cat for the LLM era"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Chris McKenzie", email = "kristopolous@yahoo.com"},
+]
+keywords = ["markdown", "terminal", "renderer", "cli", "syntax-highlighting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Utilities",
+]
+dependencies = [
+]
+
+[project.urls]
+"Homepage" = "https://github.com/day50-dev/llcat"
+"Bug Tracker" = "https://github.com/day50-dev/llcat/issues"
+
+[project.scripts]
+streamdown = "llcat:main"
+sd = "llcat:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["llcat"]
+include = ["llcat"]
+exclude = ["venv", "dist", ".git"] 
+
+

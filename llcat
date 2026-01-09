@@ -1,143 +1,72 @@
 #!/usr/bin/env python3
 import sys, requests, os, json, argparse, subprocess, select
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-c', '--conversation', help='Conversation history file')
-parser.add_argument('-m', '--model', nargs='?', const='', help='Model to use (or list models if no value)')
-parser.add_argument('-k', '--key', help='API key for authorization')
-parser.add_argument('-s', '--server', help='Server URL (e.g., http://::1:8080)')
-parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
-parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
-parser.add_argument('prompt', nargs='*', help='Your prompt')
-args = parser.parse_args()
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--conversation', help='Conversation history file')
+    parser.add_argument('-m', '--model', nargs='?', const='', help='Model to use (or list models if no value)')
+    parser.add_argument('-k', '--key', help='API key for authorization')
+    parser.add_argument('-s', '--server', help='Server URL (e.g., http://::1:8080)')
+    parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
+    parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
+    parser.add_argument('prompt', nargs='*', help='Your prompt')
+    args = parser.parse_args()
 
-if args.server:
-    base_url = args.server.rstrip('/') + '/v1'
-elif os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL'):
-    base_url = os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL')
-else:
-    parser.print_help()
-    print("Error: No server specified. Use -s <server> or set OPENAI_API_BASE/LLM_BASE_URL environment variable.", file=sys.stderr)
-    sys.exit(1)
+    if args.server:
+        base_url = args.server.rstrip('/') + '/v1'
+    elif os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL'):
+        base_url = os.getenv('OPENAI_API_BASE') or os.getenv('LLM_BASE_URL')
+    else:
+        parser.print_help()
+        print("Error: No server specified. Use -s <server> or set OPENAI_API_BASE/LLM_BASE_URL environment variable.", file=sys.stderr)
+        sys.exit(1)
 
-headers = {'Content-Type': 'application/json'}
-if args.key:
-    headers['Authorization'] = f'Bearer {args.key}'
+    headers = {'Content-Type': 'application/json'}
+    if args.key:
+        headers['Authorization'] = f'Bearer {args.key}'
 
-if args.model == '':
-    r = requests.get(f'{base_url}/models', headers=headers)
-    try:
-        models = r.json()
-        for model in models.get('data', []):
-            print(model['id'])
-    except:
-        print(f"{r.text}\n\nError Parsing JSON")
-    sys.exit(0)
+    if args.model == '':
+        r = requests.get(f'{base_url}/models', headers=headers)
+        try:
+            models = r.json()
+            for model in models.get('data', []):
+                print(model['id'])
+        except:
+            print(f"{r.text}\n\nError Parsing JSON")
+        sys.exit(0)
 
-cli_prompt = ' '.join(args.prompt) if args.prompt else ''
-stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
+    cli_prompt = ' '.join(args.prompt) if args.prompt else ''
+    stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
 
-if len(stdin_prompt) and len(cli_prompt):
-    prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}"
-else:
-    prompt = cli_prompt + stdin_prompt
+    if len(stdin_prompt) and len(cli_prompt):
+        prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}"
+    else:
+        prompt = cli_prompt + stdin_prompt
 
-messages = []
-if args.conversation and os.path.exists(args.conversation):
-    with open(args.conversation, 'r') as f:
-        messages = json.load(f)
+    messages = []
+    if args.conversation and os.path.exists(args.conversation):
+        with open(args.conversation, 'r') as f:
+            messages = json.load(f)
 
-messages.append({'role': 'user', 'content': prompt})
+    messages.append({'role': 'user', 'content': prompt})
 
-tools = None
-if args.tool_file:
-    with open(args.tool_file, 'r') as f:
-        tools = json.load(f)
+    tools = None
+    if args.tool_file:
+        with open(args.tool_file, 'r') as f:
+            tools = json.load(f)
 
-req = {'messages': messages, 'stream': True}
-if args.model:
-    req['model'] = args.model
-if tools:
-    req['tools'] = tools
-
-r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
-
-assistant_response = ''
-tool_calls = []
-current_tool_call = None
-
-for line in r.iter_lines():
-    if line:
-        line = line.decode('utf-8')
-        if line.startswith('data: '):
-            data = line[6:]
-            if data == '[DONE]':
-                break
-            try:
-                chunk = json.loads(data)
-                delta = chunk['choices'][0]['delta']
-                content = delta.get('content', '')
-                if content:
-                    print(content, end='', flush=True)
-                    assistant_response += content
-                
-                if 'tool_calls' in delta:
-                    for tc in delta['tool_calls']:
-                        idx = tc.get('index', 0)
-                        if idx >= len(tool_calls):
-                            tool_calls.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
-                            current_tool_call = tool_calls[idx]
-                        
-                        if 'id' in tc:
-                            tool_calls[idx]['id'] = tc['id']
-                        if 'function' in tc:
-                            if 'name' in tc['function']:
-                                tool_calls[idx]['function']['name'] += tc['function']['name']
-                            if 'arguments' in tc['function']:
-                                tool_calls[idx]['function']['arguments'] += tc['function']['arguments']
-            except:
-                pass
-
-print()
-
-if args.tool_program and tool_calls:
-    for tool_call in tool_calls:
-        tool_input = json.dumps({
-            'id': tool_call['id'],
-            'name': tool_call['function']['name'],
-            'arguments': json.loads(tool_call['function']['arguments'])
-        })
-        
-        print(f"\n[Executing tool: {tool_call['function']['name']}]", file=sys.stderr)
-        
-        result = subprocess.run(
-            args.tool_program,
-            input=tool_input,
-            capture_output=True,
-            text=True,
-            shell=True
-        )
-        
-        messages.append({
-            'role': 'assistant',
-            'content': assistant_response if assistant_response else None,
-            'tool_calls': tool_calls
-        })
-        messages.append({
-            'role': 'tool',
-            'tool_call_id': tool_call['id'],
-            'content': result.stdout
-        })
-    
     req = {'messages': messages, 'stream': True}
     if args.model:
         req['model'] = args.model
     if tools:
         req['tools'] = tools
-    
+
     r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
-    
+
     assistant_response = ''
+    tool_calls = []
+    current_tool_call = None
+
     for line in r.iter_lines():
         if line:
             line = line.decode('utf-8')
@@ -147,16 +76,92 @@ if args.tool_program and tool_calls:
                     break
                 try:
                     chunk = json.loads(data)
-                    content = chunk['choices'][0]['delta'].get('content', '')
+                    delta = chunk['choices'][0]['delta']
+                    content = delta.get('content', '')
                     if content:
                         print(content, end='', flush=True)
                         assistant_response += content
+                    
+                    if 'tool_calls' in delta:
+                        for tc in delta['tool_calls']:
+                            idx = tc.get('index', 0)
+                            if idx >= len(tool_calls):
+                                tool_calls.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
+                                current_tool_call = tool_calls[idx]
+                            
+                            if 'id' in tc:
+                                tool_calls[idx]['id'] = tc['id']
+                            if 'function' in tc:
+                                if 'name' in tc['function']:
+                                    tool_calls[idx]['function']['name'] += tc['function']['name']
+                                if 'arguments' in tc['function']:
+                                    tool_calls[idx]['function']['arguments'] += tc['function']['arguments']
                 except:
                     pass
+
     print()
 
-if args.conversation:
-    if len(assistant_response):
-        messages.append({'role': 'assistant', 'content': assistant_response})
-        with open(args.conversation, 'w') as f:
-            json.dump(messages, f, indent=2)
+    if args.tool_program and tool_calls:
+        for tool_call in tool_calls:
+            tool_input = json.dumps({
+                'id': tool_call['id'],
+                'name': tool_call['function']['name'],
+                'arguments': json.loads(tool_call['function']['arguments'])
+            })
+            
+            print(f"\n[Executing tool: {tool_call['function']['name']}]", file=sys.stderr)
+            
+            result = subprocess.run(
+                args.tool_program,
+                input=tool_input,
+                capture_output=True,
+                text=True,
+                shell=True
+            )
+            
+            messages.append({
+                'role': 'assistant',
+                'content': assistant_response if assistant_response else None,
+                'tool_calls': tool_calls
+            })
+            messages.append({
+                'role': 'tool',
+                'tool_call_id': tool_call['id'],
+                'content': result.stdout
+            })
+        
+        req = {'messages': messages, 'stream': True}
+        if args.model:
+            req['model'] = args.model
+        if tools:
+            req['tools'] = tools
+        
+        r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+        
+        assistant_response = ''
+        for line in r.iter_lines():
+            if line:
+                line = line.decode('utf-8')
+                if line.startswith('data: '):
+                    data = line[6:]
+                    if data == '[DONE]':
+                        break
+                    try:
+                        chunk = json.loads(data)
+                        content = chunk['choices'][0]['delta'].get('content', '')
+                        if content:
+                            print(content, end='', flush=True)
+                            assistant_response += content
+                    except Exception as ex:
+                        print(ex)
+                        pass
+        print()
+
+    if args.conversation:
+        if len(assistant_response):
+            messages.append({'role': 'assistant', 'content': assistant_response})
+            with open(args.conversation, 'w') as f:
+                json.dump(messages, f, indent=2)
+
+if __name__ == "__main__":
+    main()

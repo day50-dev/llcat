@@ -39,9 +39,7 @@ Free Samples? Sure! It's Free Software.
 
 Dependencies? Just the requests library.
 
-It's **llcat**, not **llmcat**. Let's keep it pronounceable.
-
-Feels nice to be unambitious.
+*Note: It's **llcat**, not **llmcat**. Let's keep it pronounceable.*
 
 ## Examples
 

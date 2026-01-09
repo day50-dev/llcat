@@ -13,9 +13,7 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-Go ahead, do that one right now. 
-
-Takes about 0.3 seconds. You've got that.
+If you've got 0.3 seconds to spare, go ahead and run that one right now. 
 
 I'll wait.
 

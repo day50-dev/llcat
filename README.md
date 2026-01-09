@@ -34,9 +34,9 @@ Pretty unambitious. Pretty nice.
 
 List the models on openrouter
 
-`llcat -s https://openrouter.ai/api -m`
+`uvx run llcat -s https://openrouter.ai/api -m`
 
-Go ahead, you can run that, unauthenticated, no problem.
+Go ahead, do that right now.
 
 ```
 $ llcat -s https://openrouter.ai/api \

@@ -79,13 +79,13 @@ $ source fancy.sh
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-Now go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/fancy.sh)
+Now go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/examples/fancy.sh)
 
 Surprise! It's just an example. Environment variables and a wrapper function. That's all you need.
 
 
 ## The Tool Call To Rule Them All
-This example, a very strange way to play mp3s, uses the [sophisticated 21 line `example_tool_program.py`](https://github.com/day50-dev/llcat/blob/main/example_tool_program.py) included in this repository.
+This example, a very strange way to play mp3s, uses the [sophisticated 21 line `example_tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository.
 
 It also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
 
@@ -97,7 +97,7 @@ The enterprise applications are limitless...
 
 ## Conversant Conversations?
 
-Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/conversation.sh). 
+Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh). 
 
 It even has inspectable tool calls and realtime observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
 

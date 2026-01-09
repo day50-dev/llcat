@@ -99,8 +99,6 @@ def main():
                 except:
                     pass
 
-    print()
-
     if args.tool_program and tool_calls:
         for tool_call in tool_calls:
             tool_input = json.dumps({
@@ -109,7 +107,7 @@ def main():
                 'arguments': json.loads(tool_call['function']['arguments'])
             })
             
-            print(f"\n[Executing tool: {tool_call['function']['name']}]", file=sys.stderr)
+            print(f"<Executing: {tool_call['function']['name']}>", file=sys.stderr)
             
             result = subprocess.run(
                 args.tool_program,
@@ -118,6 +116,7 @@ def main():
                 text=True,
                 shell=True
             )
+            print(f"<Result: {result}>", file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',

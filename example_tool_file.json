@@ -6,7 +6,12 @@
       "description": "List all MP3 files in the music library",
       "parameters": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "An optional path to search for files, otherwise ."
+          }
+        }
       }
     }
   },

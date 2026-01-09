@@ -8,18 +8,20 @@ That's why it's awesome.
 You can handle this! 
 
 ----
+**Very Quick Start**
 
 List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-If you've got 0.3 seconds to spare, go ahead and run that one right now. 
+Got 0.3 seconds to spare? Run that right now. 
 
 I'll wait.
 
 ----
 
 **llcat** solves all your problems. 
+
 Yes. Every one. 
 
 It can also:
@@ -81,7 +83,7 @@ $ llc "write a diss track where the knapsack problem hates on the towers of hano
 ```
 Now go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/examples/fancy.sh)
 
-Surprise! It's just an example. Environment variables and a wrapper function. That's all you need.
+Surprise! Environment variables and a wrapper function. That's all you need.
 
 
 ## The Tool Call To Rule Them All
@@ -121,7 +123,7 @@ options:
   -m, --model [MODEL]   Model to use (or list models if no value)
   -k, --key KEY         API key for authorization
   -s, --server SERVER   Server URL (e.g., http://::1:8080)
-  -tf, --tool_file TOOL_FILEMNLTH
+  -tf, --tool_file TOOL_FILE
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls

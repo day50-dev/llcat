@@ -58,7 +58,7 @@ $ llcat -s http://192.168.1.21:8080 \
 
 Pure sorcery.
 
-And what about the fancy tool-call?
+## The Tool Call To Rule Them All
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
 [Kablam!](https://frustratedfunk.bandcamp.com/track/photographic-photogenic) Alright **a16z** where's my $50 million? The enterprise applications are limitless!

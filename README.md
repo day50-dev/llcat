@@ -34,7 +34,7 @@ Pretty unambitious. Pretty nice.
 
 List the models on openrouter
 
-`uvx run llcat -s https://openrouter.ai/api -m`
+`uvx llcat -s https://openrouter.ai/api -m`
 
 Go ahead, do that right now.
 

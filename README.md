@@ -1,31 +1,34 @@
 # /usr/bin/cat for LLMs
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 
-**llcat** is an llm program with very little ambition, and that's what makes it useful. 
-There's a lot of tricked out bling cli tools out there with things like plugin systems and databases but what about the `/usr/bin/cat`?
+**llcat** is an LLM program with very little ambition in life. 
 
- * You can pipe things into it or prompt it on the command line.
- * **Conversation history** is just a file you can optionally provide. If you don't then there's no conversation saved.
+That's what makes it useful. 
+
+ * Pipe things into it or prompt it on the command line.
+ * **Conversation history** is an optional file. 
  * **Tool Calling** is done by using the toolcalling OpenAI spec. There's a file and a progrma example
- * 3rd party services & local: 
-    * `OPENAI_API_BASE` and `LLM_BASE_URL` are supported along with -s for one off
+ * Servers: 
+    * `OPENAI_API_BASE` and `LLM_BASE_URL` are supported along with -s for one off.
     * **Authentication tokens** are passed with -k. You can do `$(< somefile)` or whatever obfuscation you want, that's on you.
- * **Models** can be listed with the `-m` option unadorned. Add the name and there you go.
+ * **Models** are listed with the `-m` option and specified with it as well.
 
 Here's some things you can do
 
  * pipx install llcat
  * uv tool run llcat
 
+There's no *requirements.txt*? That's right. 
+
 ## Examples
 
-**Start with Openrouter**
+**We start with Openrouter**
 
 Listing the models on openrouter
 
 `llmcat -s https://openrouter.ai/api -m`
 
-Choosing one that doing a basic query:
+You can run that, unauthenticated, no problem.
 
 ```
 $ llcat -s https://openrouter.ai/api \

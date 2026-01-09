@@ -126,4 +126,6 @@ Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/
 
 Now it's your turn.
 
+----
+
 Brought to you by **DA`/50**: Make the future obvious.

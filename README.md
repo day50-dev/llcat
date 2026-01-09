@@ -22,7 +22,7 @@ I'll wait.
 
 **llcat** solves all your problems. 
 
-Yes. Every one. 
+Yes. Even that one.
 
 It can also:
 

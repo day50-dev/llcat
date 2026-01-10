@@ -78,7 +78,7 @@ $ llc "write a diss track where the knapsack problem hates on the towers of hano
 A conversation interface is [also quite quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
 
 ```shell
-#!/bin/bash
+#!/usr/bin/env bash
 conv=${CONV:-$(mktemp)}
 echo -e "  Using: $conv\n"
 jq -r '.[] | "\n**\(.role)**: \(.content)"' $conv | sd

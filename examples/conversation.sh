@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 conv=${CONV:-$(mktemp)}
 echo -e "  Using: $conv\n"
 jq -r '.[] | "\n**\(.role)**: \(.content)"' $conv | sd

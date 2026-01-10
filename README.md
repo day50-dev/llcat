@@ -1,5 +1,5 @@
 # /usr/bin/cat for LLMs
-**llcat** is like cURL or cat for LLMs: a stateless, low-level, idempotent composable tool for scripting and glue.
+**llcat** is like cURL or cat for LLMs: a stateless, low-level, composable tool for scripting and glue.
 
 Conversations, keys, and servers are specified using classic UNIX patterns. Nothing is hidden or tucked away.
 
@@ -95,10 +95,10 @@ This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
-llcat's toolcalling is also MCP compatible.
+llcat's tool calling is also MCP compatible.
 
 
-### Formal Documentation
+### Usage
 
 ```shell
 usage: llcat  [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]

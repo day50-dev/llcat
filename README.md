@@ -54,7 +54,7 @@ $ llcat -s http://192.168.1.21:8080 \
 ```
 One conversation, hopping across models and servers.
 
-## Summon Some More
+### Adding State
 
 The design decisions mean lots of things are within reach.
 
@@ -73,7 +73,7 @@ $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
 
-## Conversant Conversations?
+### Conversation
 
 A conversation interface is [also quite quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
 
@@ -90,14 +90,12 @@ done
 
 <img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 
-## The Tool Call To Rule Them All
-This example, a very strange way to play mp3s, uses the [sophisticated 21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. Some people call it MCP, `llcat` calls it `subprocess.run`.
-
-This demo also uses DA`/50's pretty little [streaming markdown renderer, streamdown](https://github.com/day50-dev/Streamdown).
+### Tool calling
+This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
-There you go. Alright **a16z** where's my $50 million? 
+llcat's toolcalling is also MCP compatible.
 
 
 ### Formal Documentation

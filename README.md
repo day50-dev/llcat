@@ -56,16 +56,39 @@ One conversation, hopping across models and servers.
 
 ## Summon Some More
 
-Want to store state? Let's go!
+The design decisions mean lots of things are within reach.
+
+Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh):
+
 ```shell
-$ source examples/fancy.sh
+llc()        { llcat -m "$LLC_MODEL" -s "$LLC_SERVER" -k "$LLC_KEY" "$@" }
+llc-model()  { LLC_MODEL=$(llcat -m  -s "$LLC_SERVER" -k "$LLC_KEY" | fzf) }
+llc-server() { LLC_SERVER=$1 }
+llc-key()    { LLC_KEY=$1 }
+```
+
+And now you can do things like this:
+```
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
-Go [read the four lines of `fancy.sh`](https://github.com/day50-dev/llcat/blob/main/examples/fancy.sh)
 
-Surprise! Environment variables and a wrapper function. That's all you need.
+## Conversant Conversations?
 
+A conversation interface is [also quite quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
+
+```shell
+#!/bin/bash
+conv=${CONV:-$(mktemp)}
+echo -e "  Using: $conv\n"
+jq -r '.[] | "\n**\(.role)**: \(.content)"' $conv | sd
+while read -E -p "  >> " query; do
+    llcat -c $conv "$@" "$query" |& sd
+    echo
+done
+```
+
+<img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 
 ## The Tool Call To Rule Them All
 This example, a very strange way to play mp3s, uses the [sophisticated 21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. Some people call it MCP, `llcat` calls it `subprocess.run`.
@@ -74,17 +97,10 @@ This demo also uses DA`/50's pretty little [streaming markdown renderer, streamd
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
 
-[Kablam!](https://frustratedfunk.bandcamp.com/track/photographic-photogenic) Alright **a16z** where's my $50 million? 
+There you go. Alright **a16z** where's my $50 million? 
 
-## Conversant Conversations?
 
-Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh). 
-
-It even has inspectable tool calls and realtime observability with Human-in-the-Loop! Wowza! I'll settle for merely $40 million.
-
-<img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
-
-### Boring Documentation
+### Formal Documentation
 
 ```shell
 usage: llcat  [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]

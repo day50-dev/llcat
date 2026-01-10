@@ -26,16 +26,16 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 Here's one conversation, hopping across models and servers.
 
-Start a chat with llama:
+Start a chat with Deepseek:
 ```
 $ llcat -s https://openrouter.ai/api \
-        -m meta-llama/llama-3.2-3b-instruct:free \
+        -m deepseek/deepseek-r1-0528:free \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
         "What is the capital of France?"
 ```
 
-Continue with Qwen:
+Continue it with Qwen:
 ```
 $ llcat -s https://openrouter.ai/api \
         -m qwen/qwen3-4b:free \

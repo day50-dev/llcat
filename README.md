@@ -19,10 +19,12 @@ List the models on [OpenRouter](https://openrouter.ai):
  * Use local or remote servers, authenticated or not.
  * Store **conversation history** optionally, as a boring JSON file. 
  * Pipe things from stdin and/or be prompted on the command line.
- * Do **tool calling** using the OpenAI spec. There's an example in this repository (and below).
- * List **models** using `-m` without arguments. Specify a model with the argument.
+ * Do **tool calling** using the OpenAI spec that's also MCP compatible. (Example below)
+ * List and choose models, system prompts, and add attachments.
 
-## Examples
+## Example: Transferrable conversations
+
+Here's one conversation, hopping across models and servers.
 
 Start a chat with llama:
 ```
@@ -48,9 +50,9 @@ $ llcat -s http://192.168.1.21:8080 \
         -c /tmp/convo.txt \
         "And what about Japan?"
 ```
-One conversation, hopping across models and servers.
 
-### Adding State
+
+## Example: Adding State
 
 The design decisions mean lots of things are within reach.
 
@@ -69,7 +71,7 @@ $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
 
-### Conversation
+## Example: Interactive Chat
 
 A conversation interface is [also quite quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
 
@@ -86,7 +88,7 @@ done
 
 <img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 
-### Tool calling
+## Example: Tool calling
 This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />

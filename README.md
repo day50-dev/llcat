@@ -20,22 +20,20 @@ I'll wait.
 
 ----
 
-It can also:
+llcat can:
 
+ * Use local or remote servers, authenticated or not.
  * Pipe things from stdin and/or be prompted on the command line.
  * Store **conversation history** optionally, as a boring JSON file. 
  * Do **tool calling** using the OpenAI spec. There's an example in this repository (and below).
- * Use local or remote servers, authenticated or not.
  * List **models** using `-m` without arguments. Specify a model with the argument.
 
-Free Samples? Sure! It's Free Software.
+Simple installing:
 
  * pipx install llcat
  * uvx llcat
 
 Dependencies? Just the requests library.
-
-*Note: It's **llcat**, not **llmcat**. Let's keep it pronounceable.*
 
 ## Examples
 

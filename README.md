@@ -121,7 +121,9 @@ options:
   -a, --attach ATTACH   Attach file(s)
 ```
 
-Now it's your turn.
+Now it's your turn. 
+
+We're excited to see what you build.
 
 ----
 

@@ -1,9 +1,7 @@
 # /usr/bin/cat for LLMs
-**llcat** is like curl for llms, or like cat.
+**llcat** is like cURL or cat for LLMS: a stateless, low-level, idempotent composable tool for scripting and gluing things together
 
-It's a stateless, low-level, idempotent composable tool for scripting and gluing llms together.
-
-You can easily control contexts, keys, and servers using classic unix primitives and scripting patterns. 
+You can specify contexts, keys, and servers using classic unix primitives and scripting patterns. 
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 
@@ -23,17 +21,10 @@ I'll wait.
 llcat can:
 
  * Use local or remote servers, authenticated or not.
- * Pipe things from stdin and/or be prompted on the command line.
  * Store **conversation history** optionally, as a boring JSON file. 
+ * Pipe things from stdin and/or be prompted on the command line.
  * Do **tool calling** using the OpenAI spec. There's an example in this repository (and below).
  * List **models** using `-m` without arguments. Specify a model with the argument.
-
-Simple installing:
-
- * pipx install llcat
- * uvx llcat
-
-Dependencies? Just the requests library.
 
 ## Examples
 

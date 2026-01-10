@@ -98,7 +98,7 @@ for model in $($pre -m); do
 done
 ```
 
-You can use very simple patterns like that for testing tool calling completion as well.
+You can use patterns like that also for testing tool calling completion.
 
 ## Example: Tool calling
 This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 

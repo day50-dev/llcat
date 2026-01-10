@@ -108,7 +108,7 @@ This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`
 llcat's tool calling is also MCP compatible.
 
 
-### Usage
+## Usage
 
 Now it's your turn. 
 

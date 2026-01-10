@@ -18,7 +18,7 @@ I'll wait.
 
 ----
 
-llcat can:
+**llcat** can:
 
  * Use local or remote servers, authenticated or not.
  * Store **conversation history** optionally, as a boring JSON file. 

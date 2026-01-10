@@ -1,6 +1,36 @@
 #!/usr/bin/env python3
 import sys, requests, json, argparse, subprocess, select
 
+def create_content_with_attachments(text_prompt, attachments):
+    import base64, re
+    content = []
+    
+    for file_path in attachments:
+        try:
+            with open(file_path, 'rb') as f:
+                ext = os.path.splitext(file_path)[1].lower().lstrip('.')
+                prefix = "image" if re.match(r'((we|)bm?p|j?p[en]?g)', ext) else "application"
+                
+                content.append({
+                    'type': 'document' if prefix == "application" else "image",
+                    'source': {
+                        'type': 'base64',
+                        'media_type': f"{prefix}/{ext}",
+                        'data': base64.b64encode(f.read()).decode('utf-8')
+                    }
+                })
+        except Exception as ex:
+            print(f"Warning: {ex} for {file_path}", file=sys.stderr)
+            continue
+    
+    if text_prompt:
+        content.append({
+            'type': 'text',
+            'text': text_prompt
+        })
+    
+    return content if len(content) > 1 else text_prompt
+
 def safecall(base_url, req, headers):
     try:
         r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
@@ -25,6 +55,7 @@ def main():
     parser.add_argument('-p', '--prompt', help='System prompt')
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
+    parser.add_argument('-a', '--attach', action='append', help='Attach file(s)')
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
 
@@ -71,7 +102,13 @@ def main():
                     print(f"Error: {args.conversation} is unparsable JSON (Err: {ex}). Go check that.")
                     sys.exit(1)
 
-    messages.append({'role': 'user', 'content': prompt})
+    # Create message content with attachments if provided
+    if args.attach:
+        message_content = create_content_with_attachments(prompt, args.attach)
+    else:
+        message_content = prompt
+
+    messages.append({'role': 'user', 'content': message_content})
 
     tools = None
     if args.tool_file:

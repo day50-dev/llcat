@@ -22,23 +22,24 @@ def main():
     parser.add_argument('-m', '--model', nargs='?', const='', help='Model to use (or list models if no value)')
     parser.add_argument('-k', '--key', help='API key for authorization')
     parser.add_argument('-s', '--server', help='Server URL (e.g., http://::1:8080)')
+    parser.add_argument('-p', '--prompt', help='System prompt')
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
-    parser.add_argument('prompt', nargs='*', help='Your prompt')
+    parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
 
     if args.server:
         base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
     else:
         parser.print_help()
-        print("Error: No server specified. Use -s <server> or set OPENAI_API_BASE/LLM_BASE_URL environment variable.", file=sys.stderr)
+        print("Error: No server specified", file=sys.stderr)
         sys.exit(1)
 
     headers = {'Content-Type': 'application/json'}
     if args.key:
         headers['Authorization'] = f'Bearer {args.key}'
 
-    cli_prompt = ' '.join(args.prompt) if args.prompt else ''
+    cli_prompt = ' '.join(args.user_prompt) if args.user_prompt else ''
     stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
 
     if len(stdin_prompt) and len(cli_prompt):
@@ -76,6 +77,11 @@ def main():
     if args.tool_file:
         with open(args.tool_file, 'r') as f:
             tools = json.load(f)
+
+    if args.prompt:
+        if messages[0].get('role') != 'system':
+            messages.insert(0, {})
+        messages[0] = {'role': 'system', 'content': args.prompt}
 
     req = {'messages': messages, 'stream': True}
     if args.model:

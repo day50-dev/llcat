@@ -110,6 +110,8 @@ llcat's tool calling is also MCP compatible.
 
 ### Usage
 
+Now it's your turn. 
+
 ```shell
 usage: llcat  [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]
               [-p PROMPT] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
@@ -132,8 +134,6 @@ options:
                         Program to execute tool calls
   -a, --attach ATTACH   Attach file(s)
 ```
-
-Now it's your turn. 
 
 We're excited to see what you build.
 

@@ -1,5 +1,5 @@
 # /usr/bin/cat for LLMs
-**llcat** is like cURL or cat for LLMS: a stateless, low-level, idempotent composable tool for scripting and glue.
+**llcat** is like cURL or cat for LLMs: a stateless, low-level, idempotent composable tool for scripting and glue.
 
 Conversations, keys, and servers are specified using classic unix patterns. Nothing is hidden or tucked away.
 

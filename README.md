@@ -1,11 +1,11 @@
 # /usr/bin/cat for LLMs
-**llcat** is an unambitious dumb program for LLM I/O. 
+**llcat** is like curl for llms, or like cat.
 
-That's why it's great!
+It's a stateless, low-level, idempotent composable tool for scripting and gluing llms together.
+
+You can easily control contexts, keys, and servers using classic unix primitives and scripting patterns. 
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
-
-You can handle this! 
 
 ## Very Quick Start
 Got 0.3 seconds to spare?

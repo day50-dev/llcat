@@ -20,10 +20,6 @@ I'll wait.
 
 ----
 
-**llcat** solves all your problems. 
-
-Yes. Even that one.
-
 It can also:
 
  * Pipe things from stdin and/or be prompted on the command line.
@@ -69,8 +65,6 @@ $ llcat -s http://192.168.1.21:8080 \
 ```
 One conversation, hopping across models and servers.
 
-Pure sorcery.
-
 ## Summon Some More
 
 Want to store state? Let's go!
@@ -93,8 +87,6 @@ This demo also uses DA`/50's pretty little [streaming markdown renderer, streamd
 
 [Kablam!](https://frustratedfunk.bandcamp.com/track/photographic-photogenic) Alright **a16z** where's my $50 million? 
 
-The enterprise applications are limitless...
-
 ## Conversant Conversations?
 
 Sure! [Conversation.sh is six lines of bash](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh). 
@@ -106,12 +98,12 @@ It even has inspectable tool calls and realtime observability with Human-in-the-
 ### Boring Documentation
 
 ```shell
-usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]
-                [-tf TOOL_FILE] [-tp TOOL_PROGRAM]
-                [prompt ...]
+usage: llcat  [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]
+              [-p PROMPT] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
+              [user_prompt ...]
 
 positional arguments:
-  prompt                Your prompt
+  user_prompt           Your prompt
 
 options:
   -h, --help            show this help message and exit
@@ -120,10 +112,12 @@ options:
   -m, --model [MODEL]   Model to use (or list models if no value)
   -k, --key KEY         API key for authorization
   -s, --server SERVER   Server URL (e.g., http://::1:8080)
+  -p, --prompt PROMPT   System prompt
   -tf, --tool_file TOOL_FILE
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls
+  -a, --attach ATTACH   Attach file(s)
 ```
 
 Now it's your turn.

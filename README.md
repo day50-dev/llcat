@@ -88,6 +88,18 @@ done
 
 <img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 
+## Example: Evals
+This just means running the same thing on multiple models and assessing the outcome. Here's a very simple pattern, this time using [ollama](https://ollama.com)
+
+```script
+pre="llcat -s http://localhost:11434"
+for model in $($pre -m); do
+   $pre -m $model "translate 国際化がサポートされています。to english" > ${model}.outcome
+done
+```
+
+You can use very simple patterns like that for testing tool calling completion as well.
+
 ## Example: Tool calling
 This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
 

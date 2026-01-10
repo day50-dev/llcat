@@ -12,10 +12,6 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -s https://openrouter.ai/api -m`
 
-Run that right now. 
-
-I'll wait.
-
 ----
 
 **llcat** can:

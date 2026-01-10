@@ -1,7 +1,7 @@
 # /usr/bin/cat for LLMs
 **llcat** is like cURL or cat for LLMS: a stateless, low-level, idempotent composable tool for scripting and glue.
 
-You can specify contexts, keys, and servers using classic unix primitives and scripting patterns. 
+Conversations, keys, and servers are specified using classic unix patterns. Nothing is hidden or tucked away.
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 

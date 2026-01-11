@@ -23,7 +23,7 @@ List the models on [OpenRouter](https://openrouter.ai):
  * Use local or remote servers, authenticated or not.
  * Store **conversation history** optionally, as a boring JSON file. 
  * Pipe things from stdin and/or be prompted on the command line.
- * Do **tool calling** using the OpenAI spec (and is also MCP compatible).
+ * Do **tool calling** using the OpenAI spec and MCP STDIO servers.
  * List and choose models, system prompts, and add attachments.
 
 ## Example: Transferrable conversations

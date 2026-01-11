@@ -1,4 +1,9 @@
-# /usr/bin/cat for LLMs
+<p align="center">
+<img width="238" alt="llcat" src="https://github.com/user-attachments/assets/c161862d-8a8e-4753-a6eb-8a3b67f760b0" />
+<br/> <strong>/usr/bin/cat for LLMs</h3></strong>
+</p>
+<hr>
+
 **llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
 It is intended to be like cURL or cat for LLMs as a stateless, transparent, explicit, low-level, composable tool for scripting and glue.

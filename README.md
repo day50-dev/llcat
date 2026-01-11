@@ -59,7 +59,7 @@ Since the conversation goes to the filesystem as easily parsable JSON  you can u
  
 ## Example: Adding State
 
-Explicit specifica simple lots of things are within reach.
+**llcat's** explicit syntax means lots of things are within reach.
 
 For instance, simple wrappers can be made custom to your workflow. 
 

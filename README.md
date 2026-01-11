@@ -3,7 +3,9 @@
 
 It is intended to be like cURL or cat for LLMs as a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
-Conversations, keys, servers and other configurations are specified as command line arguments. They are not saved or stored. There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
+Conversations, keys, servers and other configurations are specified as command line arguments.
+
+There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
 ## Very Quick Start
 Got 0.3 seconds to spare?

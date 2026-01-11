@@ -35,7 +35,15 @@ def safeopen(path, what='cli', fmt='json', can_create=False):
 
         if(os.path.exists(path)) or can_create:
             with open(path, flags) as f:
-                return json.load(f) if fmt == 'json' else f.read()
+                if fmt == 'json':
+                    try:
+                        return json.load(f)
+                    except Exception as ex:
+                        if can_create and os.path.getsize(path) == 0:
+                            return [] 
+                        err_out(what=what, message=f"{path} is unparsable: {ex}", code=2)
+
+                return f.read()
 
         err_out(what=what, message=f"{path} is an invalid or inaccessible path", code=2)
 
@@ -188,6 +196,9 @@ def main():
             
             print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': tool_call}), file=sys.stderr)
             
+            if '/' not in args.tool_program:
+                args.tool_program = './' + args.tool_program
+
             result = subprocess.run(
                 args.tool_program,
                 input=tool_input,

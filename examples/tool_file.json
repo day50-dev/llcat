@@ -29,7 +29,7 @@
           },
           "path": {
             "type": "string",
-            "description": "An optional path to search for files, otherwise cwd"
+            "description": "The path that was previously used"
           }
         },
         "required": ["filename"]

@@ -26,7 +26,7 @@ List the models on [OpenRouter](https://openrouter.ai):
  * Do **tool calling** using the OpenAI spec and MCP STDIO servers.
  * List and choose models, system prompts, and add attachments.
 
-## Example: Transferrable conversations
+## Example: Transferrable Conversations
 
 Because conversations, models and servers are decoupled, you can easily mix and match them at any time.
 

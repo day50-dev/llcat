@@ -20,7 +20,7 @@ def create_content_with_attachments(text_prompt, attachments):
                     }
                 })
         except Exception as ex:
-            err_out(what="attachment", message=file_path, obj=ex)
+            err_out(what="attachment", message=file_path, obj=str(ex), code=126)
     
     if text_prompt:
         content.append({
@@ -69,7 +69,7 @@ def main():
         base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
     else:
         parser.print_help()
-        err_out(what="cli", message="No server specified")
+        err_out(what="cli", message="No server specified", code=2)
 
     headers = {'Content-Type': 'application/json'}
     if args.key:
@@ -89,9 +89,9 @@ def main():
             models = r.json()
             for model in models.get('data', []):
                 print(model['id'])
+            sys.exit(0)
         except:
-            err_out(what="parsing", message=f"{base_url}/models unparsable json", obj=r.text)
-        sys.exit(0)
+            err_out(what="parsing", message=f"{base_url}/models is unparsable json", obj=r.text, code=126)
 
     import os
     messages = []
@@ -101,10 +101,10 @@ def main():
                 messages = json.load(f)
             except Exception as ex:
                 # If it's an empty file, proceed
-                if len(f.read(10)) == 0:
+                if os.path.getsize(args.conversation) == 0:
                     messages = []
                 else:
-                    err_out(what="parsing", message=f"{args.conversation} is unparsable json", obj=ex)
+                    err_out(what="parsing", message=f"{args.conversation} is unparsable json", obj=str(ex), code=126)
 
     # Create message content with attachments if provided
     if args.attach:

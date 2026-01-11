@@ -1,7 +1,9 @@
 # /usr/bin/cat for LLMs
 **llcat** is like cURL or cat for LLMs: a stateless, low-level, composable tool for scripting and glue.
 
-Conversations, keys, and servers are intentionally left unmanaged and specified using classic UNIX patterns. Nothing is hidden. There's no magic. it's transparent and explicit. 
+Conversations, keys, servers and other configurations are intentionally left unmanaged. 
+
+They are specified using classic UNIX patterns. Nothing is hidden. There's no magic. it's transparent and explicit. 
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 
@@ -23,6 +25,8 @@ List the models on [OpenRouter](https://openrouter.ai):
  * List and choose models, system prompts, and add attachments.
 
 ## Example: Transferrable conversations
+
+Because conversations, models and servers are decoupled decoupled, you can easily mix and match them at any time.
 
 Here's one conversation, hopping across models and servers.
 
@@ -51,12 +55,16 @@ $ llcat -s http://192.168.1.21:8080 \
         "And what about Japan?"
 ```
 
-
+Since the conversation goes to the filesystem as easily parsable JSON  you can use things like `inotify` or `fuse` and push it off to a vector search backend or even modify the context window between calls simply by editing the file
+ 
 ## Example: Adding State
+
 
 The design decisions mean lots of things are within reach.
 
-Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh):
+Explicit specification means that simple wrappers can be made custom to your workflow. 
+
+Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
 llc()        { llcat -m "$LLC_MODEL" -s "$LLC_SERVER" -k "$LLC_KEY" "$@" }
@@ -70,6 +78,8 @@ And now you can do things like this:
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
+
+There's no configuration files to parse or implicit states.
 
 ## Example: Interactive Chat
 
@@ -100,10 +110,17 @@ done
 
 You can use patterns like that also for testing tool calling completion.
 
+If an error happens contacting the server, you get the request, response, and exits non-zero.
+
 ## Example: Tool calling
 This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
 
 <img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
+
+
+In this example you can see how nothing is hidden so when the LLM made the mistake it was immediately identifiable. 
+
+That meta information goes to `stderr`.
 
 llcat's tool calling is also MCP compatible.
 

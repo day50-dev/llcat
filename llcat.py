@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, requests, json, argparse, subprocess, select
+import sys, requests, json, argparse, subprocess, select, importlib.metadata
 
 def create_content_with_attachments(text_prompt, attachment_list):
     import base64, re
@@ -79,6 +79,7 @@ def err_out(what="general", message="", obj=None, code=1):
     sys.exit(code)
 
 def main():
+    version = importlib.metadata.version('llcat')
     parser = argparse.ArgumentParser()
     parser.add_argument('-c',  '--conversation', help='Conversation history file')
     parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
@@ -88,6 +89,7 @@ def main():
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
     parser.add_argument('-a',  '--attach', action='append', help='Attach file(s)')
+    parser.add_argument('--version', action='version', version='%(prog)s ' + version)
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
 

@@ -1,11 +1,16 @@
-# /usr/bin/cat for LLMs
+<p align="center">
+<img width="238" alt="llcat" src="https://github.com/user-attachments/assets/c161862d-8a8e-4753-a6eb-8a3b67f760b0" />
+<br/> <strong>/usr/bin/cat for LLMs</h3></strong>
+</p>
+<hr>
+
 **llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
 It is intended to be like cURL or cat for LLMs as a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
-Conversations, keys, servers and other configurations are specified as command line arguments. They are not saved or stored. There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
+Conversations, keys, servers and other configurations are specified as command line arguments.
 
-<img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
+There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
 ## Very Quick Start
 Got 0.3 seconds to spare?
@@ -19,7 +24,7 @@ List the models on [OpenRouter](https://openrouter.ai):
 **llcat** can:
 
  * Use local or remote servers, authenticated or not.
- * Store **conversation history** optionally, as a boring JSON file. 
+ * Store **conversation history** optionally, as a JSON file. 
  * Pipe things from stdin and/or be prompted on the command line.
  * Do **tool calling** using the OpenAI spec and MCP STDIO servers.
  * List and choose models, system prompts, and add attachments.
@@ -63,9 +68,9 @@ Since the conversation goes to the filesystem as easily parsable JSON  you can u
 
 **llcat's** explicit syntax means lots of things are within reach.
 
-For instance, simple wrappers can be made custom to your workflow. 
+For instance simple wrappers can be made custom to your workflow. 
 
-Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
+Here's a way [to store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
 llc()        { llcat -m "$LLC_MODEL" -u "$LLC_SERVER" -k "$LLC_KEY" "$@" }
@@ -80,7 +85,7 @@ $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
 
-There's no configuration files to parse or implicit states.
+There's no configuration files to parse or implicit states to manage.
 
 ## Example: Interactive Chat
 

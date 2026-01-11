@@ -26,7 +26,7 @@ List the models on [OpenRouter](https://openrouter.ai):
 
 ## Example: Transferrable conversations
 
-Because conversations, models and servers are decoupled decoupled, you can easily mix and match them at any time.
+Because conversations, models and servers are decoupled, you can easily mix and match them at any time.
 
 Here's one conversation, hopping across models and servers.
 

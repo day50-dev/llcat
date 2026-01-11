@@ -30,12 +30,18 @@ def create_content_with_attachments(text_prompt, attachments):
     
     return content if len(content) > 1 else text_prompt
 
-def safecall(base_url, req, headers):
+def safecall(base_url, req = None, headers = None, what = "post"):
     try:
-        r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+        if what == 'post':
+            r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+        else:
+            r = requests.get(base_url, headers=headers, stream=True)
+
         r.raise_for_status()  
+
     except Exception as e:
         obj = {'request': req, 'response': {}}
+
         if hasattr(e, 'response') and e.response is not None:
             obj['response']['status_code'] = e.response.status_code
             try:
@@ -84,7 +90,7 @@ def main():
         prompt = cli_prompt + stdin_prompt
 
     if args.model == '' and len(prompt) == 0:
-        r = requests.get(f'{base_url}/models', headers=headers)
+        r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
         try:
             models = r.json()
             for model in models.get('data', []):

@@ -20,8 +20,7 @@ def create_content_with_attachments(text_prompt, attachments):
                     }
                 })
         except Exception as ex:
-            print(f"Warning: {ex} for {file_path}", file=sys.stderr)
-            continue
+            err_out(what="attachment", message=file_path, obj=ex)
     
     if text_prompt:
         content.append({
@@ -36,15 +35,22 @@ def safecall(base_url, req, headers):
         r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
         r.raise_for_status()  
     except requests.exceptions.RequestException as e:
-        print(f"Error: {e}", file=sys.stderr)
+        obj = {'request': req, 'response': {}}
         if hasattr(e, 'response') and e.response is not None:
+            obj['response']['status_code'] = e.response.status_code
             try:
                 error_data = e.response.json()
-                print(f"Request: {json.dumps(req,indent=2)}\nResponse: {json.dumps(error_data, indent=2)}", file=sys.stderr)
+                obj['response']['payload'] = error_data
             except:
-                print(f"Server response: {e.response.text}", file=sys.stderr)
-        sys.exit(1)
+                obj['response']['payload'] = e.response.text
+
+        err_out(what='response', message=e, obj=obj)
     return r
+
+def err_out(what="general", message="", obj={}, code=1):
+    fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
+    print(json.dumps(fulldump), file=sys.stderr)
+    sys.exit(code)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -63,8 +69,7 @@ def main():
         base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
     else:
         parser.print_help()
-        print("Error: No server specified", file=sys.stderr)
-        sys.exit(1)
+        err_out(what="cli", message="No server specified")
 
     headers = {'Content-Type': 'application/json'}
     if args.key:
@@ -85,7 +90,7 @@ def main():
             for model in models.get('data', []):
                 print(model['id'])
         except:
-            print(f"{r.text}\n\nError Parsing JSON")
+            err_out(what="parsing", message=f"{base_url}/models unparsable json", obj=r.text)
         sys.exit(0)
 
     import os
@@ -99,8 +104,7 @@ def main():
                 if len(f.read(10)) == 0:
                     messages = []
                 else:
-                    print(f"Error: {args.conversation} is unparsable JSON (Err: {ex}). Go check that.")
-                    sys.exit(1)
+                    err_out(what="parsing", message=f"{args.conversation} is unparsable json", obj=ex)
 
     # Create message content with attachments if provided
     if args.attach:
@@ -172,7 +176,7 @@ def main():
                 'arguments': json.loads(tool_call['function']['arguments'])
             })
             
-            print(f"> *Executing: {tool_call['function']['name']}({tool_call['function']['arguments']})*", file=sys.stderr)
+            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': tool_call}), file=sys.stderr)
             
             result = subprocess.run(
                 args.tool_program,
@@ -181,7 +185,7 @@ def main():
                 text=True,
                 shell=True
             )
-            print(f"> *Result: {result}*", file=sys.stderr)
+            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': result}), file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',

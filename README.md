@@ -1,11 +1,11 @@
 # /usr/bin/cat for LLMs
-**llcat** is like cURL or cat for LLMs: a stateless, low-level, composable tool for scripting and glue. It is transparent and explicit. 
+**llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
-Conversations, keys, servers and other configurations are intentionally left unmanaged. 
+It is intended to be like cURL or cat for LLMs as a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
-Istead these are specified using classic UNIX patterns. 
+Conversations, keys, servers and other configurations are specified as command line arguments. They are not saved or stored. There is no configuration, caching, or state saved between runs. 
 
-There is no magic and nothing is hidden. 
+There is no magic. Everything is surfaced and all errors are JSON parsable.
 
 <img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
 

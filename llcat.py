@@ -122,10 +122,7 @@ def main():
     tools = safeopen(args.tool_file) if args.tool_file else None
 
     # Attachment
-    if args.attach:
-        message_content = create_content_with_attachments(prompt, args.attach)
-    else:
-        message_content = prompt
+    message_content = create_content_with_attachments(prompt, args.attach) if args.attach else prompt
 
     # System Prompt
     if args.prompt:

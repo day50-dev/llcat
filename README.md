@@ -6,7 +6,7 @@
 
 **llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
-It is intended to be like cURL or cat for LLMs as a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
+It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
 Conversations, keys, servers and other configurations are specified as command line arguments.
 

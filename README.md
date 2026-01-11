@@ -70,7 +70,7 @@ Since the conversation goes to the filesystem as easily parsable JSON  you can u
 
 For instance simple wrappers can be made custom to your workflow. 
 
-Here's a way [to could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
+Here's a way [to store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
 llc()        { llcat -m "$LLC_MODEL" -u "$LLC_SERVER" -k "$LLC_KEY" "$@" }

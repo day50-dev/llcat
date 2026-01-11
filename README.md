@@ -61,7 +61,7 @@ Since the conversation goes to the filesystem as easily parsable JSON  you can u
 
 Explicit specifica simple lots of things are within reach.
 
-For instance, simple wrappers can be made custom meansat your workflow. 
+For instance, simple wrappers can be made custom to your workflow. 
 
 Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 

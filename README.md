@@ -157,6 +157,7 @@ options:
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls
   -a, --attach ATTACH   Attach file(s)
+  --version             show program's version number and exit
 ```
 
 We're excited to see what you build.

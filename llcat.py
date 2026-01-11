@@ -1,26 +1,23 @@
 #!/usr/bin/env python3
 import sys, requests, json, argparse, subprocess, select
 
-def create_content_with_attachments(text_prompt, attachments):
+def create_content_with_attachments(text_prompt, attachment_list):
     import base64, re
     content = []
     
-    for file_path in attachments:
-        try:
-            with open(file_path, 'rb') as f:
-                ext = os.path.splitext(file_path)[1].lower().lstrip('.')
-                prefix = "image" if re.match(r'((we|)bm?p|j?p[en]?g)', ext) else "application"
-                
-                content.append({
-                    'type': 'document' if prefix == "application" else "image",
-                    'source': {
-                        'type': 'base64',
-                        'media_type': f"{prefix}/{ext}",
-                        'data': base64.b64encode(f.read()).decode('utf-8')
-                    }
-                })
-        except Exception as ex:
-            err_out(what="attachment", message=file_path, obj=str(ex), code=126)
+    for file_path in attachment_list:
+        file_data = safeopen(file_path, what='attachment', fmt='bin')
+        ext = os.path.splitext(file_path)[1].lower().lstrip('.')
+        prefix = "image" if re.match(r'((we|)bm?p|j?p[en]?g)', ext) else "application"
+        
+        content.append({
+            'type': 'document' if prefix == "application" else "image",
+            'source': {
+                'type': 'base64',
+                'media_type': f"{prefix}/{ext}",
+                'data': base64.b64encode(file_data).decode('utf-8')
+            }
+        })
     
     if text_prompt:
         content.append({
@@ -29,6 +26,21 @@ def create_content_with_attachments(text_prompt, attachments):
         })
     
     return content if len(content) > 1 else text_prompt
+
+def safeopen(path, what='cli', fmt='json'):
+    import os
+
+    try:
+        flags = 'rb' if fmt == 'bin' else 'r'
+
+        if(os.path.exists(path)):
+            with open(path, flags) as f:
+                return json.load(f) if fmt == 'json' else f.read()
+
+        err_out(what=what, message=f"{path} is an invalid or inaccessible path", code=2)
+
+    except Exception as ex:
+        err_out(what=what, message=f"{path} cannot be loaded", obj=str(ex), code=126)
 
 def safecall(base_url, req = None, headers = None, what = "post"):
     try:
@@ -71,6 +83,7 @@ def main():
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
 
+    # Server and headers
     if args.server:
         base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
     else:
@@ -81,6 +94,7 @@ def main():
     if args.key:
         headers['Authorization'] = f'Bearer {args.key}'
 
+    # Prompt 
     cli_prompt = ' '.join(args.user_prompt) if args.user_prompt else ''
     stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
 
@@ -89,8 +103,10 @@ def main():
     else:
         prompt = cli_prompt + stdin_prompt
 
+    # Model
     if args.model == '' and len(prompt) == 0:
         r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
+
         try:
             models = r.json()
             for model in models.get('data', []):
@@ -99,43 +115,34 @@ def main():
         except:
             err_out(what="parsing", message=f"{base_url}/models is unparsable json", obj=r.text, code=126)
 
-    import os
-    messages = []
-    if args.conversation and os.path.exists(args.conversation):
-        with open(args.conversation, 'r') as f:
-            try:
-                messages = json.load(f)
-            except Exception as ex:
-                # If it's an empty file, proceed
-                if os.path.getsize(args.conversation) == 0:
-                    messages = []
-                else:
-                    err_out(what="parsing", message=f"{args.conversation} is unparsable json", obj=str(ex), code=126)
+    # Conversation
+    messages = safeopen(args.conversation) if args.conversation else []
 
-    # Create message content with attachments if provided
+    # Tools
+    tools = safeopen(args.tool_file) if args.tool_file else None
+
+    # Attachment
     if args.attach:
         message_content = create_content_with_attachments(prompt, args.attach)
     else:
         message_content = prompt
 
-    messages.append({'role': 'user', 'content': message_content})
-
-    tools = None
-    if args.tool_file:
-        with open(args.tool_file, 'r') as f:
-            tools = json.load(f)
-
+    # System Prompt
     if args.prompt:
         if messages[0].get('role') != 'system':
             messages.insert(0, {})
         messages[0] = {'role': 'system', 'content': args.prompt}
 
+    messages.append({'role': 'user', 'content': message_content})
+
+    # Request construction
     req = {'messages': messages, 'stream': True}
     if args.model:
         req['model'] = args.model
     if tools:
         req['tools'] = tools
 
+    # The actual call
     r = safecall(base_url,req,headers)
 
     assistant_response = ''
@@ -234,8 +241,11 @@ def main():
     if args.conversation:
         if len(assistant_response):
             messages.append({'role': 'assistant', 'content': assistant_response})
-            with open(args.conversation, 'w') as f:
-                json.dump(messages, f, indent=2)
+            try:
+                with open(args.conversation, 'w') as f:
+                    json.dump(messages, f, indent=2)
+            except Exception as ex:
+                err_out(what="conversation", message=f"{args.conversation} is unwritable", obj=str(ex), code=126)
 
 if __name__ == "__main__":
     main()

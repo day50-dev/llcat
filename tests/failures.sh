@@ -8,16 +8,16 @@ set -x
 
 $ll 
 
-$ll -s invalid_url
+$ll -u invalid_url
 
-$ll -s http://unreachable
+$ll -u http://unreachable
 
-$ll -s http://unreachable -m
+$ll -u http://unreachable -m
 
-$ll -s https://openrouter.ai/api/ -m bogus_model
+$ll -u https://openrouter.ai/api/ -m bogus_model
 
-$ll -s https://openrouter.ai/api/ -m openai/gpt-4
+$ll -u https://openrouter.ai/api/ -m openai/gpt-4
 
-$ll -s https://openrouter.ai/api/ -m openai/gpt-4 -k bogus_key
+$ll -u https://openrouter.ai/api/ -m openai/gpt-4 -k bogus_key
 
-$ll -s https://openrouter.ai/api/ -m openai/gpt-4 -k /tmp/key_file
+$ll -u https://openrouter.ai/api/ -m openai/gpt-4 -k /tmp/key_file

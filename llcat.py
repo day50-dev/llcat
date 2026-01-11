@@ -72,14 +72,14 @@ def err_out(what="general", message="", obj=None, code=1):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--conversation', help='Conversation history file')
-    parser.add_argument('-m', '--model', nargs='?', const='', help='Model to use (or list models if no value)')
-    parser.add_argument('-k', '--key', help='API key for authorization')
-    parser.add_argument('-s', '--server', help='Server URL (e.g., http://::1:8080)')
-    parser.add_argument('-p', '--prompt', help='System prompt')
+    parser.add_argument('-c',  '--conversation', help='Conversation history file')
+    parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
+    parser.add_argument('-sk', '--key', help='Server API key for authorization')
+    parser.add_argument('-su', '-u', '--server', help='Server URL (e.g., http://::1:8080)')
+    parser.add_argument('-s',  '--system', help='System prompt')
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
-    parser.add_argument('-a', '--attach', action='append', help='Attach file(s)')
+    parser.add_argument('-a',  '--attach', action='append', help='Attach file(s)')
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
 
@@ -99,7 +99,7 @@ def main():
     stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
 
     if len(stdin_prompt) and len(cli_prompt):
-        prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}"
+        prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}</content>"
     else:
         prompt = cli_prompt + stdin_prompt
 
@@ -125,10 +125,10 @@ def main():
     message_content = create_content_with_attachments(prompt, args.attach) if args.attach else prompt
 
     # System Prompt
-    if args.prompt:
+    if args.system:
         if messages[0].get('role') != 'system':
             messages.insert(0, {})
-        messages[0] = {'role': 'system', 'content': args.prompt}
+        messages[0] = {'role': 'system', 'content': args.system}
 
     messages.append({'role': 'user', 'content': message_content})
 

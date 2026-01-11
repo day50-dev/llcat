@@ -12,7 +12,7 @@ Got 0.3 seconds to spare?
 
 List the models on [OpenRouter](https://openrouter.ai):
 
-`uvx llcat -s https://openrouter.ai/api -m`
+`uvx llcat -u https://openrouter.ai/api -m`
 
 ----
 
@@ -32,7 +32,7 @@ Here's one conversation, hopping across models and servers.
 
 Start a chat with Deepseek:
 ```
-$ llcat -s https://openrouter.ai/api \
+$ llcat -u https://openrouter.ai/api \
         -m deepseek/deepseek-r1-0528:free \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
@@ -41,7 +41,7 @@ $ llcat -s https://openrouter.ai/api \
 
 Continue it with Qwen:
 ```
-$ llcat -s https://openrouter.ai/api \
+$ llcat -u https://openrouter.ai/api \
         -m qwen/qwen3-4b:free \
         -c /tmp/convo.txt \
         -k $(cat openrouter.key) \
@@ -50,7 +50,7 @@ $ llcat -s https://openrouter.ai/api \
 
 And finish on the local network:
 ```
-$ llcat -s http://192.168.1.21:8080 \
+$ llcat -u http://192.168.1.21:8080 \
         -c /tmp/convo.txt \
         "And what about Japan?"
 ```
@@ -66,7 +66,7 @@ For instance, simple wrappers can be made custom to your workflow.
 Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
-llc()        { llcat -m "$LLC_MODEL" -s "$LLC_SERVER" -k "$LLC_KEY" "$@" }
+llc()        { llcat -m "$LLC_MODEL" -u "$LLC_SERVER" -k "$LLC_KEY" "$@" }
 llc-model()  { LLC_MODEL=$(llcat -m  -s "$LLC_SERVER" -k "$LLC_KEY" | fzf) }
 llc-server() { LLC_SERVER=$1 }
 llc-key()    { LLC_KEY=$1 }
@@ -101,7 +101,7 @@ done
 Running the same thing on multiple models and assessing the outcome is straight forward. Here we're using [ollama](https://ollama.com)
 
 ```script
-pre="llcat -s http://localhost:11434"
+pre="llcat -u http://localhost:11434"
 for model in $($pre -m); do
    $pre -m $model "translate 国際化がサポートされています。to english" > ${model}.outcome
 done
@@ -129,9 +129,9 @@ llcat's tool calling is also MCP compatible.
 Now it's your turn. 
 
 ```shell
-usage: llcat  [-h] [-c CONVERSATION] [-m [MODEL]] [-k KEY] [-s SERVER]
-              [-p PROMPT] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
-              [user_prompt ...]
+usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-sk KEY] [-su SERVER]
+             [-s SYSTEM] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
+             [user_prompt ...]
 
 positional arguments:
   user_prompt           Your prompt
@@ -141,9 +141,10 @@ options:
   -c, --conversation CONVERSATION
                         Conversation history file
   -m, --model [MODEL]   Model to use (or list models if no value)
-  -k, --key KEY         API key for authorization
-  -s, --server SERVER   Server URL (e.g., http://::1:8080)
-  -p, --prompt PROMPT   System prompt
+  -sk, --key KEY        Server API key for authorization
+  -su, -u, --server SERVER
+                        Server URL (e.g., http://::1:8080)
+  -s, --system SYSTEM   System prompt
   -tf, --tool_file TOOL_FILE
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM

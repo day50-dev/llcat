@@ -57,7 +57,7 @@ $ llcat -s http://192.168.1.21:8080 \
         "And what about Japan?"
 ```
 
-Since the conversation goes to the filesystem as easily parsable JSON  you can use things like `inotify` or `fuse` and push it off to a vector search backend or even modify the context window between calls simply by editing the file
+Since the conversation goes to the filesystem as easily parsable JSON  you can use things like `inotify` or `fuse` and push it off to a vector search backend or modify the context window between calls.
  
 ## Example: Adding State
 

@@ -24,6 +24,8 @@ List the models on [OpenRouter](https://openrouter.ai):
  * Do **tool calling** using the OpenAI spec and MCP STDIO servers.
  * List and choose models, system prompts, and add attachments.
 
+llcat's basic CLI parameters are also compatible with [Simon Willison's llm](https://github.com/simonw/llm).
+
 ## Example: Transferrable Conversations
 
 Because conversations, models and servers are decoupled, you can easily mix and match them at any time.

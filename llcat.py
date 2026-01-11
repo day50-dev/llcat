@@ -195,7 +195,7 @@ def main():
                 text=True,
                 shell=True
             )
-            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': result}), file=sys.stderr)
+            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': str(result)}), file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',
@@ -244,4 +244,9 @@ def main():
                 err_out(what="conversation", message=f"{args.conversation} is unwritable", obj=str(ex), code=126)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt as ex:
+        err_out(message=f"Keyboard interrupt")
+    except Exception as ex:
+        err_out(message=str(ex))

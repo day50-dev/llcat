@@ -21,7 +21,7 @@ List the models on [OpenRouter](https://openrouter.ai):
  * Use local or remote servers, authenticated or not.
  * Store **conversation history** optionally, as a boring JSON file. 
  * Pipe things from stdin and/or be prompted on the command line.
- * Do **tool calling** using the OpenAI spec that's also MCP compatible. (Example below)
+ * Do **tool calling** using the OpenAI spec (and is also MCP compatible).
  * List and choose models, system prompts, and add attachments.
 
 ## Example: Transferrable conversations
@@ -98,7 +98,7 @@ done
 <img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
 
 ## Example: Evals
-This just means running the same thing on multiple models and assessing the outcome. Here's a very simple pattern, this time using [ollama](https://ollama.com)
+Running the same thing on multiple models and assessing the outcome is straight forward. Here we're using [ollama](https://ollama.com)
 
 ```script
 pre="llcat -s http://localhost:11434"

@@ -10,7 +10,7 @@ It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, 
 
 Conversations, keys, servers and other configurations are specified as command line arguments.
 
-There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
+There is no caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
 ## Very Quick Start
 Got 0.3 seconds to spare?

@@ -24,7 +24,7 @@ List the models on [OpenRouter](https://openrouter.ai):
 **llcat** can:
 
  * Use local or remote servers, authenticated or not.
- * Store **conversation history** optionally, as a boring JSON file. 
+ * Store **conversation history** optionally, as a JSON file. 
  * Pipe things from stdin and/or be prompted on the command line.
  * Do **tool calling** using the OpenAI spec and MCP STDIO servers.
  * List and choose models, system prompts, and add attachments.
@@ -68,9 +68,9 @@ Since the conversation goes to the filesystem as easily parsable JSON  you can u
 
 **llcat's** explicit syntax means lots of things are within reach.
 
-For instance, simple wrappers can be made custom to your workflow. 
+For instance simple wrappers can be made custom to your workflow. 
 
-Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
+Here's a way [to could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
 llc()        { llcat -m "$LLC_MODEL" -u "$LLC_SERVER" -k "$LLC_KEY" "$@" }

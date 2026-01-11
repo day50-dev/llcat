@@ -34,7 +34,7 @@ def safecall(base_url, req, headers):
     try:
         r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
         r.raise_for_status()  
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         obj = {'request': req, 'response': {}}
         if hasattr(e, 'response') and e.response is not None:
             obj['response']['status_code'] = e.response.status_code
@@ -44,10 +44,10 @@ def safecall(base_url, req, headers):
             except:
                 obj['response']['payload'] = e.response.text
 
-        err_out(what='response', message=e, obj=obj)
+        err_out(what='response', message=str(e), obj=obj)
     return r
 
-def err_out(what="general", message="", obj={}, code=1):
+def err_out(what="general", message="", obj=None, code=1):
     fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
     print(json.dumps(fulldump), file=sys.stderr)
     sys.exit(code)
@@ -69,7 +69,7 @@ def main():
         base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
     else:
         parser.print_help()
-        err_out(what="cli", message="No server specified", code=2)
+        err_out(what="cli", message="No server URL specified", code=2)
 
     headers = {'Content-Type': 'application/json'}
     if args.key:

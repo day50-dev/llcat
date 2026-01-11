@@ -5,8 +5,6 @@ It is intended to be like cURL or cat for LLMs as a stateless, transparent, expl
 
 Conversations, keys, servers and other configurations are specified as command line arguments. They are not saved or stored. There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
-<img width="670" height="592" alt="llcat" src="https://github.com/user-attachments/assets/0fac2db4-3b2e-4639-b6b1-1b0a121a5744" />
-
 ## Very Quick Start
 Got 0.3 seconds to spare?
 

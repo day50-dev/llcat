@@ -27,13 +27,13 @@ def create_content_with_attachments(text_prompt, attachment_list):
     
     return content if len(content) > 1 else text_prompt
 
-def safeopen(path, what='cli', fmt='json'):
+def safeopen(path, what='cli', fmt='json', can_create=False):
     import os
 
     try:
         flags = 'rb' if fmt == 'bin' else 'r'
 
-        if(os.path.exists(path)):
+        if(os.path.exists(path)) or can_create:
             with open(path, flags) as f:
                 return json.load(f) if fmt == 'json' else f.read()
 
@@ -116,7 +116,7 @@ def main():
             err_out(what="parsing", message=f"{base_url}/models is unparsable json: {ex}", obj=r.text, code=126)
 
     # Conversation
-    messages = safeopen(args.conversation) if args.conversation else []
+    messages = safeopen(args.conversation, can_create=True) if args.conversation else []
 
     # Tools
     tools = safeopen(args.tool_file) if args.tool_file else None

@@ -59,10 +59,9 @@ Since the conversation goes to the filesystem as easily parsable JSON  you can u
  
 ## Example: Adding State
 
+Explicit specifica simple lots of things are within reach.
 
-The design decisions mean lots of things are within reach.
-
-Explicit specification means that simple wrappers can be made custom to your workflow. 
+For instance, simplelee wrappers can be made custom meansat your workflow. 
 
 Here's one way [you could store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 

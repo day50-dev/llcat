@@ -234,8 +234,7 @@ def main():
                             print(content, end='', flush=True)
                             assistant_response += content
                     except Exception as ex:
-                        print(ex)
-                        pass
+                        err_out(what="toolcall", message=str(ex), obj=data)
         print()
 
     if args.conversation:

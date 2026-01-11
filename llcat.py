@@ -112,8 +112,8 @@ def main():
             for model in models.get('data', []):
                 print(model['id'])
             sys.exit(0)
-        except:
-            err_out(what="parsing", message=f"{base_url}/models is unparsable json", obj=r.text, code=126)
+        except Exception as ex:
+            err_out(what="parsing", message=f"{base_url}/models is unparsable json: {ex}", obj=r.text, code=126)
 
     # Conversation
     messages = safeopen(args.conversation) if args.conversation else []

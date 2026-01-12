@@ -132,6 +132,10 @@ You can use patterns like that also for testing tool calling completion.
 
 If an error happens contacting the server, you get the request, response, and a non-zero exit.
 
+Try this to see what that looks like
+
+`uvx llcat -u fakecomputer`
+
 ## Example: Tool calling
 The examples directory contains this [music playing tool](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) listing the contents of [this album](https://elektrobopacek.bandcamp.com/album/untitled): 
 

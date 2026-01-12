@@ -8,11 +8,10 @@
 
 It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
-Conversations, keys, servers and other configurations are explicitly specified each time as command line arguments.
+Conversations, keys, servers and other configurations are explicitly specified each time as command line arguments. 
+This makes building with llcat simple and obvious.
 
-There is no caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
-
-These can be power design decisions. Continue reading to find out more.
+There is no caching or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
 ## Very Quick Start
 Got 0.3 seconds to spare?

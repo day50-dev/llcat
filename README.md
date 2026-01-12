@@ -151,12 +151,9 @@ Here are the MP3 files in your `~/mp3` directory:
 Would you like to play any of these? Just share the filename, and I can play it for you! 🎵
 ```
 
-In this example you can see how nothing is hidden so if the LLM made the mistake it is immediately identifiable. 
+In this example you can see how nothing is hidden so if the model makes s mistake it is immediately identifiable. 
 
 That meta information goes to `stderr`.
-
-llcat's tool calling is also MCP compatible.
-
 
 ## Usage
 

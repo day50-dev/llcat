@@ -14,8 +14,6 @@ This makes building things with llcat simple and direct.
 There is no caching or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
 ## Very Quick Start
-Got 0.3 seconds to spare?
-
 List the models on [OpenRouter](https://openrouter.ai):
 
 `uvx llcat -u https://openrouter.ai/api -m`

@@ -88,7 +88,7 @@ There's no configuration files to parse or implicit states to manage.
 
 ## Example: Interactive Chat
 
-A conversation interface is [also quite quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
+A conversation interface is [also quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
 
 ```shell
 #!/usr/bin/env bash
@@ -116,7 +116,7 @@ Our conversation loop can be invoked like
 
 `conversation.sh -u http://myserver -k mykey -m model`
 
-Adding additional features is now quite trivial.
+Adding additional features is trivial.
 
 ## Example: Evals
 Running the same thing on multiple models and assessing the outcome is straight forward. Here we're using [ollama](https://ollama.com)

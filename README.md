@@ -6,11 +6,12 @@
 
 **llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
-It is intended to be like cURL or cat for LLMs as a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
+It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
-Conversations, keys, servers and other configurations are specified as command line arguments.
+Conversations, keys, servers and other configurations are explicitly specified each execution as command line arguments. 
+This makes building things with llcat simple and direct.
 
-There is no configuration, caching, or state saved between runs. Everything gets surfaced and errors are JSON parsable.
+There is no caching or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 
 ## Very Quick Start
 Got 0.3 seconds to spare?
@@ -93,16 +94,31 @@ A conversation interface is [also quite quick](https://github.com/day50-dev/llca
 
 ```shell
 #!/usr/bin/env bash
+
+# We pick a file for the conversation or allow a user to pass it in with a CONV environment variable
 conv=${CONV:-$(mktemp)}
 echo -e "  Using: $conv\n"
+
+# Show the previous conversation if there is any, stylize it with streamdown
 jq -r '.[] | "\n**\(.role)**: \(.content)"' $conv | sd
+
+# Read prompts in a loop
 while read -E -p "  >> " query; do
+
+    # Take the command line arguments of the shell script, pass them to llcat
     llcat -c $conv "$@" "$query" |& sd
     echo
 done
 ```
+So now instead of
 
-<img width="1918" height="1106" alt="2026-01-09_07-35" src="https://github.com/user-attachments/assets/e6584f6d-65f3-4dc8-83c7-1d2fe2b32bb0" />
+`llcat -u http://myserver -k mykey -m model`
+
+Our conversation loop can be invoked like
+
+`conversation.sh -u http://myserver -k mykey -m model`
+
+Adding additional features is now quite trivial.
 
 ## Example: Evals
 Running the same thing on multiple models and assessing the outcome is straight forward. Here we're using [ollama](https://ollama.com)

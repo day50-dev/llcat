@@ -123,7 +123,7 @@ Adding additional features is now quite trivial.
 ## Example: Evals
 Running the same thing on multiple models and assessing the outcome is straight forward. Here we're using [ollama](https://ollama.com)
 
-```script
+```shell
 pre="llcat -u http://localhost:11434"
 for model in $($pre -m); do
    $pre -m $model "translate 国際化がサポートされています。to english" > ${model}.outcome

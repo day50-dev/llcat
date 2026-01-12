@@ -9,7 +9,7 @@
 It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
 
 Conversations, keys, servers and other configurations are explicitly specified each time as command line arguments. 
-This makes building with llcat simple and obvious.
+This makes building things with llcat simple and direct.
 
 There is no caching or state saved between runs. Everything gets surfaced and errors are JSON parsable.
 

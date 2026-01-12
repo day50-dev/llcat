@@ -133,7 +133,7 @@ You can use patterns like that also for testing tool calling completion.
 If an error happens contacting the server, you get the request, response, and exits non-zero.
 
 ## Example: Tool calling
-The examples directory contains this [music playing tool](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py): 
+The examples directory contains this [music playing tool](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) listing the contents of [this album](https://elektrobopacek.bandcamp.com/album/untitled): 
 
 ```shell
 $ llcat -u http://127.1:8080 -tf tool_file.json -tp tool_program.py "what mp3s do i have in my ~/mp3 directory"

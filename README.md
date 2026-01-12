@@ -160,8 +160,8 @@ The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 Now it's your turn. 
 
 ```shell
-usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-sk KEY] [-su SERVER]
-             [-s SYSTEM] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
+usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-sk KEY] [-su SERVER] [-s SYSTEM]
+             [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH] [--version]
              [user_prompt ...]
 
 positional arguments:

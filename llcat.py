@@ -207,7 +207,7 @@ def main():
                 'arguments': json.loads(tool_call['function']['arguments'])
             })
             
-            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': tool_call}), file=sys.stderr)
+            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': json.loads(tool_input)}), file=sys.stderr)
             
             if '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program

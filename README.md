@@ -137,10 +137,23 @@ If an error happens contacting the server, you get the request, response, and ex
 ## Example: Tool calling
 This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
 
-<img width="1919" height="606" alt="tc" src="https://github.com/user-attachments/assets/a704ae5c-cfcb-4abc-b1a7-ad1290e60510" />
+```shell
+$ llcat -u http://127.1:8080 -tf tool_file.json -tp tool_program.py "what mp3s do i have in my ~/mp3 directory"
+{"level": "debug", "class": "toolcall", "message": "request", "obj": {"id": "iwCGjcRic8GAFB2jUvBUOeF9NNrldfxz", "type": "function", "function": {"name": "list_mp3s", "arguments": "{\"path\":\"~/mp3\"}"}}}
+{"level": "debug", "class": "toolcall", "message": "result", "obj": ["Elektrobopacek - Towards the final Battle.mp3", "Elektrobopacek - Escape the Labyrinth.mp3", "Elektrobopacek - Journey to the misty Lands.mp3", "Elektrobopacek - Mistral Forte.mp3", "Elektrobopacek - Leaving Spaceport X-19.mp3", "Elektrobopacek - Dracula Rising.mp3"]}
+Here are the MP3 files in your `~/mp3` directory:
 
+1. **Elektrobopacek - Towards the final Battle.mp3**
+2. **Elektrobopacek - Escape the Labyrinth.mp3**
+3. **Elektrobopacek - Journey to the misty Lands.mp3**
+4. **Elektrobopacek - Mistral Forte.mp3**
+5. **Elektrobopacek - Leaving Spaceport X-19.mp3**
+6. **Elektrobopacek - Dracula Rising.mp3**
 
-In this example you can see how nothing is hidden so when the LLM made the mistake it was immediately identifiable. 
+Would you like to play any of these? Just share the filename, and I can play it for you! 🎵
+```
+
+In this example you can see how nothing is hidden so if the LLM made the mistake it is immediately identifiable. 
 
 That meta information goes to `stderr`.
 

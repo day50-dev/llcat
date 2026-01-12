@@ -133,7 +133,7 @@ You can use patterns like that also for testing tool calling completion.
 If an error happens contacting the server, you get the request, response, and exits non-zero.
 
 ## Example: Tool calling
-This example, a very strange way to play mp3s, uses a [21 line `tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
+This example, a very strange way to play mp3s, uses [`tool_program.py`](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) included in this repository. 
 
 ```shell
 $ llcat -u http://127.1:8080 -tf tool_file.json -tp tool_program.py "what mp3s do i have in my ~/mp3 directory"
@@ -153,7 +153,7 @@ Would you like to play any of these? Just share the filename, and I can play it 
 
 In this example you can see how nothing is hidden so if the model makes s mistake it is immediately identifiable. 
 
-That meta information goes to `stderr`.
+The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
 ## Usage
 

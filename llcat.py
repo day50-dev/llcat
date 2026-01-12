@@ -27,6 +27,12 @@ def create_content_with_attachments(text_prompt, attachment_list):
     
     return content if len(content) > 1 else text_prompt
 
+def maybejson(txt):
+    try:
+        return json.loads(txt)
+    except:
+        return txt
+
 def safeopen(path, what='cli', fmt='json', can_create=False):
     import os
 
@@ -34,7 +40,12 @@ def safeopen(path, what='cli', fmt='json', can_create=False):
         flags = 'rb' if fmt == 'bin' else 'r'
 
         if(os.path.exists(path)) or can_create:
-            with open(path, flags) as f:
+            if can_create:
+                fd = os.open(path, os.O_RDONLY | os.O_CREAT, mode=0o644)
+            else:
+                fd = os.open(path, os.O_RDONLY)
+
+            with os.fdopen(fd, flags) as f:
                 if fmt == 'json':
                     try:
                         return json.load(f)
@@ -208,7 +219,7 @@ def main():
                 text=True,
                 shell=True
             )
-            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': str(result)}), file=sys.stderr)
+            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result.stdout)}), file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',

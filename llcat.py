@@ -147,9 +147,12 @@ def main():
 
     # System Prompt
     if args.system:
-        if messages[0].get('role') != 'system':
-            messages.insert(0, {})
-        messages[0] = {'role': 'system', 'content': args.system}
+        if len(messages) > 0: 
+            if messages[0].get('role') != 'system':
+                messages.insert(0, {})
+            messages[0] = {'role': 'system', 'content': args.system}
+        else:
+            messages.append({'role': 'system', 'content': args.system})
 
     messages.append({'role': 'user', 'content': message_content})
 

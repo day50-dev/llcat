@@ -88,7 +88,7 @@ There's no configuration files to parse or implicit states to manage.
 
 ## Example: Interactive Chat
 
-A conversation interface is [also quite quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
+A conversation interface is [also quick](https://github.com/day50-dev/llcat/blob/main/examples/conversation.sh):
 
 ```shell
 #!/usr/bin/env bash
@@ -116,7 +116,7 @@ Our conversation loop can be invoked like
 
 `conversation.sh -u http://myserver -k mykey -m model`
 
-Adding additional features is now quite trivial.
+Adding additional features is trivial.
 
 ## Example: Evals
 Running the same thing on multiple models and assessing the outcome is straight forward. Here we're using [ollama](https://ollama.com)
@@ -130,7 +130,11 @@ done
 
 You can use patterns like that also for testing tool calling completion.
 
-If an error happens contacting the server, you get the request, response, and exits non-zero.
+If an error happens contacting the server, you get the request, response, and a non-zero exit.
+
+Try this to see what that looks like
+
+`uvx llcat -u fakecomputer`
 
 ## Example: Tool calling
 The examples directory contains this [music playing tool](https://github.com/day50-dev/llcat/blob/main/examples/tool_program.py) listing the contents of [this album](https://elektrobopacek.bandcamp.com/album/untitled): 
@@ -151,7 +155,7 @@ Here are the MP3 files in your `~/mp3` directory:
 Would you like to play any of these? Just share the filename, and I can play it for you! 🎵
 ```
 
-In this example you can see how nothing is hidden so if the model makes s mistake it is immediately identifiable. 
+In this example you can see how nothing is hidden so if the model makes a mistake it is immediately identifiable. 
 
 The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
@@ -160,8 +164,8 @@ The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 Now it's your turn. 
 
 ```shell
-usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-sk KEY] [-su SERVER]
-             [-s SYSTEM] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
+usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-sk KEY] [-su SERVER] [-s SYSTEM]
+             [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH] [--version]
              [user_prompt ...]
 
 positional arguments:

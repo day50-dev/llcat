@@ -176,7 +176,7 @@ $ mcpcat init call calculate '{"expression":"2+2"}' | \
 The beauty here is you can see the Emperor's new clothes up close:
 
 ```shell
-$ mcpcat init call calculate '{"expression":"2+2"}
+$ mcpcat init call calculate '{"expression":"2+2"}`
 {"jsonrpc":"2.0","id":4,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"mcpcat","version":"1.0"}}}
 {"jsonrpc":"2.0","method":"notifications/initialized"}
 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"calculate","arguments":{"expression":"2+2"}}}

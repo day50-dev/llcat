@@ -1,0 +1,23 @@
+#!/bin/bash
+# mcp-emit: A pure Unix generator for MCP packets
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      "init")
+        echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"llcat","version":"1.0"}}}'
+        echo '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+        ;;
+      "list")
+        echo '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+        ;;
+      "call")
+        echo '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"'$2'","arguments":'$3'}}'
+        shift; shift
+        ;;
+      *)
+        echo "Usage: mcp-emit [init|list|call]"
+        exit 1
+        ;;
+    esac
+    shift
+done

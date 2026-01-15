@@ -160,12 +160,16 @@ In this example you can see how nothing is hidden so if the model makes a mistak
 
 The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
-## MCP
+## MCPcat
 MCP can be simple. There's a tool included `mcpcat`. It's a Bash script. Under 25 lines. 
 
-Here is an example use case:
+Here is an example:
 
-`$ mcpcat init list | uv run python -m somemcpserver | jq .`
+```shell
+$ mcpcat init list | \
+  uv run python -m somemcpserver | \
+  jq .`
+```
 
 Let's say there's a calculator mcp, you can do something like
 

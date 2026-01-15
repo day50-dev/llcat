@@ -160,7 +160,25 @@ In this example you can see how nothing is hidden so if the model makes a mistak
 
 The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
-## Usage
+## MCP
+MCP can be simple. There's a tool included mcpcat. Here is an example use case:
+
+`mcpcat init list | uv run python -m somemcpserver | jq .`
+
+Let's say there's a calculator mcp, you can do something like
+
+`mcpcat init call calculate '{"expression":"2+2"}' | uv run python -m mcp_server_calculator`
+
+The beauty here is if you can see the Emperor's new clothes up close:
+
+```shell
+$ mcpcat init call calculate '{"expression":"2+2"}
+{"jsonrpc":"2.0","id":4,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"mcpcat","version":"1.0"}}}
+{"jsonrpc":"2.0","method":"notifications/initialized"}
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"calculate","arguments":{"expression":"2+2"}}}
+```
+
+---
 
 Now it's your turn. 
 
@@ -191,6 +209,6 @@ options:
 
 We're excited to see what you build.
 
-----
+## Usage
 
 Brought to you by **DA`/50**: Make the future obvious.

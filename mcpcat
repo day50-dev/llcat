@@ -1,5 +1,4 @@
 #!/bin/bash
-# mcpcat
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
@@ -15,7 +14,7 @@ while [[ "$#" -gt 0 ]]; do
         shift; shift
         ;;
       *)
-        echo "Usage: mcp-emit [init|list|call]"
+        echo "Usage: mcpcat [init|list|call]"
         exit 1
         ;;
     esac

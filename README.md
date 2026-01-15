@@ -179,7 +179,7 @@ $ mcpcat init call calculate '{"expression":"2+2"}' | \
    jq .
 ```
 
-The beauty here is you can see the Emperor's new clothes up close:
+The beauty here is you can see the Emperor's new clothes up close. Simply omit the pipe.
 
 ```shell
 $ mcpcat init call calculate '{"expression":"2+2"}'
@@ -187,6 +187,10 @@ $ mcpcat init call calculate '{"expression":"2+2"}'
 {"jsonrpc":"2.0","method":"notifications/initialized"}
 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"calculate","arguments":{"expression":"2+2"}}}
 ```
+
+That's all the STDIO Transport is. 
+
+There's ways of doing the network transports with this script as well. All you need is the appropriate network tools and compose away.
 
 ## Usage
 

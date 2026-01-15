@@ -5,6 +5,8 @@
 </p>
 <hr>
 
+*"What if OpenAI’s API docs were a Unix tool?"*
+
 **llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
 It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.

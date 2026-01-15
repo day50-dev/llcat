@@ -182,7 +182,7 @@ $ mcpcat init call calculate '{"expression":"2+2"}`
 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"calculate","arguments":{"expression":"2+2"}}}
 ```
 
----
+## Usage
 
 Now it's your turn. 
 

@@ -161,15 +161,19 @@ In this example you can see how nothing is hidden so if the model makes a mistak
 The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
 ## MCP
-MCP can be simple. There's a tool included mcpcat. Here is an example use case:
+MCP can be simple. There's a tool included `mcpcat`. Here is an example use case:
 
-`mcpcat init list | uv run python -m somemcpserver | jq .`
+`$ mcpcat init list | uv run python -m somemcpserver | jq .`
 
 Let's say there's a calculator mcp, you can do something like
 
-`mcpcat init call calculate '{"expression":"2+2"}' | uv run python -m mcp_server_calculator`
+```shell
+$ mcpcat init call calculate '{"expression":"2+2"}' | \
+   uv run python -m mcp_server_calculator \
+   jq .
+```
 
-The beauty here is if you can see the Emperor's new clothes up close:
+The beauty here is you can see the Emperor's new clothes up close:
 
 ```shell
 $ mcpcat init call calculate '{"expression":"2+2"}

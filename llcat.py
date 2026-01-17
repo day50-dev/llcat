@@ -2,7 +2,7 @@
 import sys, requests, json, argparse, subprocess, select, importlib.metadata
 
 def create_content_with_attachments(text_prompt, attachment_list):
-    import base64, re
+    import base64, re, os
     content = []
     
     for file_path in attachment_list:

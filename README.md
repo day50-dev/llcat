@@ -44,7 +44,7 @@ Start a chat with Deepseek:
 $ llcat -u https://openrouter.ai/api \
         -m deepseek/deepseek-r1-0528:free \
         -c /tmp/convo.txt \
-        -k $(cat openrouter.key) \
+        -sk $(cat openrouter.key) \
         "What is the capital of France?"
 ```
 
@@ -53,7 +53,7 @@ Continue it with Qwen:
 $ llcat -u https://openrouter.ai/api \
         -m qwen/qwen3-4b:free \
         -c /tmp/convo.txt \
-        -k $(cat openrouter.key) \
+        -sk $(cat openrouter.key) \
         "And what about Canada?"
 ```
 

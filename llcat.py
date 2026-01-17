@@ -84,6 +84,10 @@ def safecall(base_url, req = None, headers = None, what = "post"):
         err_out(what='response', message=str(e), obj=obj)
     return r
 
+def getmcpdef(path):
+    config = safeopen(path)
+    for what,def in config.get('mcpServers'):
+        
 def err_out(what="general", message="", obj=None, code=1):
     fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
     print(json.dumps(fulldump), file=sys.stderr)
@@ -94,6 +98,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c',  '--conversation', help='Conversation history file')
     parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
+    parser.add_argument('-mf', '--mcpfile', help='MCP file to use')
     parser.add_argument('-sk', '--key', help='Server API key for authorization')
     parser.add_argument('-su', '-u', '--server', help='Server URL (e.g., http://::1:8080)')
     parser.add_argument('-s',  '--system', help='System prompt')
@@ -141,6 +146,9 @@ def main():
 
     # Tools
     tools = safeopen(args.tool_file) if args.tool_file else None
+
+    if args.mcpfile:
+        tools += getmcpdef(args.mcpfile)
 
     # Attachment
     message_content = create_content_with_attachments(prompt, args.attach) if args.attach else prompt
@@ -199,8 +207,8 @@ def main():
                                     tool_calls[idx]['function']['name'] += tc['function']['name']
                                 if 'arguments' in tc['function']:
                                     tool_calls[idx]['function']['arguments'] += tc['function']['arguments']
-                except:
-                    pass
+                except Exception as ex:
+                    err_out(what="toolcall", message=str(ex), obj=data)
 
     if args.tool_program and tool_calls:
         for tool_call in tool_calls:

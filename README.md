@@ -75,6 +75,7 @@ For instance simple wrappers can be made custom to your workflow.
 Here's a way [to store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
+llf()        { llc "$@" 2> >(jq . >&2) 1> >(sd >&1) }
 llc()        { llcat -m "$LLC_MODEL" -u "$LLC_SERVER" -k "$LLC_KEY" "$@" }
 llc-model()  { LLC_MODEL=$(llcat -m  -s "$LLC_SERVER" -k "$LLC_KEY" | fzf) }
 llc-server() { LLC_SERVER=$1 }
@@ -86,6 +87,8 @@ And now you can do things like this:
 $ llc-server http://192.168.1.21:8080
 $ llc "write a diss track where the knapsack problem hates on the towers of hanoi"
 ```
+
+And what's that llf at the top? That uses jq to pretty print the errors and streamdown to pretty print the output
 
 There's no configuration files to parse or implicit states to manage.
 

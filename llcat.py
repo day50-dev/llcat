@@ -83,10 +83,11 @@ def safecall(base_url, req = None, headers = None, what = "post"):
 
         err_out(what='response', message=str(e), obj=obj)
     return r
-
+"""
 def getmcpdef(path):
     config = safeopen(path)
     for what,def in config.get('mcpServers'):
+"""
         
 def err_out(what="general", message="", obj=None, code=1):
     fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
@@ -147,8 +148,10 @@ def main():
     # Tools
     tools = safeopen(args.tool_file) if args.tool_file else None
 
+    """
     if args.mcpfile:
         tools += getmcpdef(args.mcpfile)
+    """
 
     # Attachment
     message_content = create_content_with_attachments(prompt, args.attach) if args.attach else prompt

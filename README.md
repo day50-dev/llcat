@@ -5,6 +5,8 @@
 </p>
 <hr>
 
+*"What if OpenAI’s API docs were a Unix tool?"*
+
 **llcat** is a general-purpose CLI-based OpenAI-compatible `/chat/completions` caller. 
 
 It is like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.
@@ -42,7 +44,7 @@ Start a chat with Deepseek:
 $ llcat -u https://openrouter.ai/api \
         -m deepseek/deepseek-r1-0528:free \
         -c /tmp/convo.txt \
-        -k $(cat openrouter.key) \
+        -sk $(cat openrouter.key) \
         "What is the capital of France?"
 ```
 
@@ -51,7 +53,7 @@ Continue it with Qwen:
 $ llcat -u https://openrouter.ai/api \
         -m qwen/qwen3-4b:free \
         -c /tmp/convo.txt \
-        -k $(cat openrouter.key) \
+        -sk $(cat openrouter.key) \
         "And what about Canada?"
 ```
 
@@ -160,12 +162,16 @@ In this example you can see how nothing is hidden so if the model makes a mistak
 
 The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
-## MCP
-MCP can be simple. There's a tool included `mcpcat`. It's a Bash script. Under 25 lines. 
+## MCPcat
+MCP can be simple with simple tools. There's one included here. `mcpcat` is a 22 line Bash script. 
 
-Here is an example use case:
+Here is an example of it in use:
 
-`$ mcpcat init list | uv run python -m somemcpserver | jq .`
+```shell
+$ mcpcat init list | \
+  uv run python -m my-server | \
+  jq .
+```
 
 Let's say there's a calculator mcp, you can do something like
 
@@ -175,7 +181,7 @@ $ mcpcat init call calculate '{"expression":"2+2"}' | \
    jq .
 ```
 
-The beauty here is you can see the Emperor's new clothes up close:
+The beauty here is you can see the Emperor's new clothes up close. Simply omit the pipe.
 
 ```shell
 $ mcpcat init call calculate '{"expression":"2+2"}'
@@ -183,6 +189,10 @@ $ mcpcat init call calculate '{"expression":"2+2"}'
 {"jsonrpc":"2.0","method":"notifications/initialized"}
 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"calculate","arguments":{"expression":"2+2"}}}
 ```
+
+That's all the STDIO Transport is. 
+
+There's ways of doing the network transports with this script as well. All you need is the appropriate network tools and compose away.
 
 ## Usage
 

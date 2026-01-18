@@ -64,7 +64,9 @@ def safeopen(path, what='cli', fmt='json', can_create=False):
         err_out(what=what, message=f"{path} cannot be loaded", obj=str(ex), code=126)
 
 def safecall(base_url, req = None, headers = {}, what = "post"):
-    headers['User-Agent'] = 'llcat ' + VERSION
+    headers['User-Agent'] = headers['X-Title'] = 'llcat ' + VERSION
+    headers['HTTP-Referer'] = 'https://github.com/day50-dev/llcat'
+
     try:
         if what == 'post':
             r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)

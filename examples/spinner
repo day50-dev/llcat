@@ -3,8 +3,8 @@
 tput civis
 
 clean() {
-    tput cnorm
-    exit
+  tput cnorm
+  exit
 }
 trap clean EXIT SIGINT SIGTERM SIGQUIT
 

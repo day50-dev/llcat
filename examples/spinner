@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 tput civis
 
 clean() {
@@ -7,16 +8,14 @@ clean() {
 }
 trap clean EXIT SIGINT SIGTERM SIGQUIT
 
-CL="\e[2K"
 SPINNER="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
 i=0
 while ! read -N 1 -t 0.05 tok ; do
-  printf "${CL}${SPINNER:$i:1}\r"
-  (( i++ ))
-  [[ "$i" == ${#SPINNER} ]] && i=0
+  printf "\e[2K${SPINNER:$i:1}\r"
+  (( i = ( i + 1 ) % ${#SPINNER} ))
 done
 
 echo -en "$tok"
-$@
+[[ -n "$1" ]] && $@ || cat
 clean

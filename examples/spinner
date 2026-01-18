@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+tput civis
+
+clean() {
+    tput cnorm
+    exit
+}
+trap clean EXIT SIGINT SIGTERM SIGQUIT
+
+CL="\e[2K"
+SPINNER="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+
+i=0
+while ! read -N 1 -t 0.05 tok ; do
+  printf "${CL}${SPINNER:$i:1}\r"
+  (( i++ ))
+  [[ "$i" == ${#SPINNER} ]] && i=0
+done
+
+echo -en "$tok"
+$@
+clean

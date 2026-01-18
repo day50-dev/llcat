@@ -15,7 +15,9 @@ while ! read -N 1 -t 0.05 tok ; do
   printf "\e[2K${SPINNER:$i:1}\r"
   (( i = ( i + 1 ) % ${#SPINNER} ))
 done
+{ 
+    echo -en "$tok"; 
+    cat; 
+} | ( [[ -n "$1" ]] && $@ || cat )
 
-echo -en "$tok"
-[[ -n "$1" ]] && $@ || cat
 clean

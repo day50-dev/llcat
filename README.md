@@ -75,7 +75,7 @@ For instance simple wrappers can be made custom to your workflow.
 Here's a way [to store state](https://github.com/day50-dev/llcat/blob/main/examples/state.sh) with environment variables to make invocation more convenient:
 
 ```shell
-llf()        { llc "$@" 2> >(jq . >&2) 1> >(sd >&1) }
+llf()        { llc "$@" 2> >(jq . >&2) | sd }
 llc()        { llcat -m "$LLC_MODEL" -u "$LLC_SERVER" -sk "$LLC_KEY" "$@" }
 llc-model()  { LLC_MODEL=$(llcat -m  -u "$LLC_SERVER" -sk "$LLC_KEY" | fzf) }
 llc-server() { LLC_SERVER=$1 }

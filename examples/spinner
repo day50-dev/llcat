@@ -16,8 +16,8 @@ while ! read -N 1 -t 0.05 tok ; do
   (( i = ( i + 1 ) % ${#SPINNER} ))
 done
 { 
-    echo -en "$tok"; 
-    cat; 
+  echo -en "$tok"; 
+  cat; 
 } | ( [[ -n "$1" ]] && $@ || cat )
 
 clean

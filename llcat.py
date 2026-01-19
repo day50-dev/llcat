@@ -174,12 +174,16 @@ def main():
     global VERSION
     VERSION = importlib.metadata.version('llcat')
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c',  '--conversation', help='Conversation history file')
+
+    # We want to show things in the order of importance
+    parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080)')
+    parser.add_argument('-sk', '--server_key', help='Server API key for authorization')
+
     parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
-    parser.add_argument('-mf', '--mcpfile', help='MCP file to use')
-    parser.add_argument('-sk', '--key', help='Server API key for authorization')
-    parser.add_argument('-su', '-u', '--server', help='Server URL (e.g., http://::1:8080)')
     parser.add_argument('-s',  '--system', help='System prompt')
+
+    parser.add_argument('-c',  '--conversation', help='Conversation history file')
+    parser.add_argument('-mf', '--mcp_file', help='MCP file to use')
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
     parser.add_argument('-a',  '--attach', action='append', help='Attach file(s)')
@@ -188,15 +192,15 @@ def main():
     args = parser.parse_args()
 
     # Server and headers
-    if args.server:
-        base_url = args.server.rstrip('/').rstrip('/v1') + '/v1'
+    if args.server_url:
+        base_url = args.server_url.rstrip('/').rstrip('/v1') + '/v1'
     else:
         parser.print_help()
         err_out(what="cli", message="No server URL specified", code=2)
 
     headers = {'Content-Type': 'application/json'}
-    if args.key:
-        headers['Authorization'] = f'Bearer {args.key}'
+    if args.server_key:
+        headers['Authorization'] = f'Bearer {args.server_key}'
 
     # Prompt 
     cli_prompt = ' '.join(args.user_prompt) if args.user_prompt else ''
@@ -225,9 +229,9 @@ def main():
     # Tools
     tools = safeopen(args.tool_file) if args.tool_file else None
 
-    if args.mcpfile:
+    if args.mcp_file:
         tools = tools or []
-        tools += mcp_get_def(args.mcpfile)
+        tools += mcp_get_def(args.mcp_file)
 
     # Attachment
     message_content = create_content_with_attachments(prompt, args.attach) if args.attach else prompt

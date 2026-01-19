@@ -165,7 +165,25 @@ In this example you can see how nothing is hidden so if the model makes a mistak
 
 The debug JSON objects are sent to `stderr` so routing it separately is trivial.
 
-## MCPcat
+## MCP
+
+### MCPFile
+This file is what you usually need to make for an mcp server definition:
+
+```json
+{
+  "mcpServers": {
+    "<some_server>": {
+      "command": "<some_command>",
+      "args": ["<some>", "<args>"]
+    }
+    ...
+  }
+}
+```
+
+
+### MCPCat
 MCP can be simple with simple tools. There's one included here. `mcpcat` is a 22 line Bash script. 
 
 Here is an example of it in use:
@@ -202,8 +220,9 @@ There's ways of doing the network transports with this script as well. All you n
 Now it's your turn. 
 
 ```shell
-usage: llcat [-h] [-c CONVERSATION] [-m [MODEL]] [-sk KEY] [-su SERVER] [-s SYSTEM]
-             [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH] [--version]
+usage: llcat [-h] [-su SERVER_URL] [-sk SERVER_KEY] [-m [MODEL]]
+             [-s SYSTEM] [-c CONVERSATION] [-mf MCP_FILE] [-tf TOOL_FILE]
+             [-tp TOOL_PROGRAM] [-a ATTACH] [--version]
              [user_prompt ...]
 
 positional arguments:
@@ -211,13 +230,16 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  -su, -u, --server_url SERVER_URL
+                        Server URL (e.g., http://::1:8080)
+  -sk, --server_key SERVER_KEY
+                        Server API key for authorization
+  -m, --model [MODEL]   Model to use (or list models if no value)
+  -s, --system SYSTEM   System prompt
   -c, --conversation CONVERSATION
                         Conversation history file
-  -m, --model [MODEL]   Model to use (or list models if no value)
-  -sk, --key KEY        Server API key for authorization
-  -su, -u, --server SERVER
-                        Server URL (e.g., http://::1:8080)
-  -s, --system SYSTEM   System prompt
+  -mf, --mcp_file MCP_FILE
+                        MCP file to use
   -tf, --tool_file TOOL_FILE
                         JSON file with tool definitions
   -tp, --tool_program TOOL_PROGRAM

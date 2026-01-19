@@ -88,11 +88,82 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
 
         err_out(what='response', message=str(e), obj=obj)
     return r
-"""
-def getmcpdef(path):
+
+def mcp_start(server_config):
+    """Start MCP server and return (proc, rpc)"""
+    proc = subprocess.Popen(
+        [server_config['command']] + server_config['args'],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        text=True
+    )
+
+    id = 0
+    def rpc(method, params=None):
+        nonlocal id
+        msg = {"jsonrpc": "2.0", "method": method}
+        if params is not None:
+            id += 1
+            msg["params"] = params
+            msg["id"] = id
+
+        proc.stdin.write(json.dumps(msg) + '\n')
+
+    rpc("initialize", {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "llcat", "version": "1.0"}})
+    rpc("notifications/initialized")
+
+    proc.stdin.flush()  
+    proc.stdout.readline()
+    return proc, rpc
+
+def mcp_finish(proc):
+    """Flush, read response, terminate, return parsed JSON"""
+    proc.stdin.flush()
+    response = json.loads(proc.stdout.readline())
+    proc.terminate()
+    return response.get('result', {})
+
+def discover_tools(server_config):
+    proc, rpc = mcp_start(server_config)
+    rpc("tools/list", {})
+    return mcp_finish(proc).get('tools')
+
+def call_tool(server_config, tool_name, arguments):
+    proc, rpc = mcp_start(server_config)
+    rpc("tools/call", {"name": tool_name, "arguments": arguments})
+    return mcp_finish(proc)
+
+mcp_dict_ref = {}
+def mcp_get_def(path):
+    import re
     config = safeopen(path)
-    for what,def in config.get('mcpServers'):
-"""
+
+    global mcp_dict_ref
+    tool_return = []
+    for server_name, server_config in config.get('mcpServers').items():
+        safe_name = re.sub(r'[^a-z0-9_]', '_', server_name.lower())
+        counter = 0
+        
+        tool_dict = discover_tools(server_config)
+        for tool in tool_dict:
+            base_name = f"{safe_name}_{tool['name']}"
+            llm_tool_name = base_name
+            
+            while llm_tool_name in mcp_dict_ref:
+                llm_tool_name = f"{base_name}{counter}"
+                counter += 1
+            
+            mcp_dict_ref[llm_tool_name] = (server_config, tool['name'])
+            tool['name'] = llm_tool_name
+            tool['parameters'] = tool['inputSchema']
+            del tool['inputSchema']
+
+            tool_return.append({'type': 'function', 'function': tool})
+
+    return tool_return
+
+def mcp_call_tool(name, params):
+    pass
         
 def err_out(what="general", message="", obj=None, code=1):
     fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
@@ -154,10 +225,9 @@ def main():
     # Tools
     tools = safeopen(args.tool_file) if args.tool_file else None
 
-    """
     if args.mcpfile:
-        tools += getmcpdef(args.mcpfile)
-    """
+        tools = tools or []
+        tools += mcp_get_def(args.mcpfile)
 
     # Attachment
     message_content = create_content_with_attachments(prompt, args.attach) if args.attach else prompt
@@ -221,6 +291,7 @@ def main():
 
     if args.tool_program and tool_calls:
         for tool_call in tool_calls:
+            fname = tool_call['function']['name']
             tool_input = json.dumps({
                 'id': tool_call['id'],
                 'name': tool_call['function']['name'],
@@ -232,14 +303,22 @@ def main():
             if '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program
 
-            result = subprocess.run(
-                args.tool_program,
-                input=tool_input,
-                capture_output=True,
-                text=True,
-                shell=True
-            )
-            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result.stdout)}), file=sys.stderr)
+            if fname in mcp_dict_ref:
+                ref = mcp_dict_ref[fname]
+                result = json.dumps(
+                        call_tool(
+                            ref[0], ref[1], tool_call['function']['arguments']
+                        ))
+            else:
+                result = subprocess.run(
+                    args.tool_program,
+                    input=tool_input,
+                    capture_output=True,
+                    text=True,
+                    shell=True
+                ).stdout
+
+            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',

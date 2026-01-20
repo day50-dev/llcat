@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, requests, json, argparse, subprocess, select, importlib.metadata
+import sys, requests, json, argparse, subprocess, select, importlib.metadata, traceback
 
 VERSION = None
 SHUTUP = []
@@ -62,10 +62,10 @@ def safeopen(path, what='cli', fmt='json', can_create=False):
         err_out(what=what, message=f"{path} is an invalid or inaccessible path", code=2)
 
     except Exception as ex:
-        err_out(what=what, message=f"{path} cannot be loaded", obj=str(ex), code=126)
+        err_out(what=what, message=f"{path} cannot be loaded", obj=traceback.format_exc(), code=126)
 
 def safecall(base_url, req = None, headers = {}, what = "post"):
-    headers['User-Agent'] = headers['X-Title'] = 'llcat ' + VERSION
+    headers['User-Agent'] = headers['X-Title'] = 'llcat'
     headers['HTTP-Referer'] = 'https://github.com/day50-dev/llcat'
 
     try:
@@ -279,7 +279,7 @@ def main():
     r = safecall(base_url,req,headers)
 
     assistant_response = ''
-    tool_calls = []
+    tool_call_list = []
     current_tool_call = None
 
     # tool_call is two calls
@@ -295,22 +295,22 @@ def main():
             if 'tool_calls' in delta:
                 for tc in delta['tool_calls']:
                     idx = tc.get('index', 0)
-                    if idx >= len(tool_calls):
-                        tool_calls.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
-                        current_tool_call = tool_calls[idx]
+                    if idx >= len(tool_call_list):
+                        tool_call_list.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
+                        current_tool_call = tool_call_list[idx]
                     
                     if 'id' in tc:
-                        tool_calls[idx]['id'] = tc['id']
+                        tool_call_list[idx]['id'] = tc['id']
                     if 'function' in tc:
                         for key in ['name','arguments']:
                             if key in tc['function']:
-                                tool_calls[idx]['function'][key] += tc['function'][key]
+                                tool_call_list[idx]['function'][key] += tc['function'][key]
 
         except Exception as ex:
-            err_out(what="toolcall", message=str(ex), obj=data)
+            err_out(what="toolcall", message=traceback.format_exc(), obj=data)
 
-    if args.tool_program and tool_calls:
-        for tool_call in tool_calls:
+    if args.tool_program and tool_call_list:
+        for tool_call in tool_call_list:
             fname = tool_call['function']['name']
             
             if not set(['toolcall','debug','request']).intersection(SHUTUP):
@@ -320,23 +320,20 @@ def main():
                 args.tool_program = './' + args.tool_program
 
             config, name = mcp_dict_ref[fname]
-            result = json.dumps(
-                        call_tool(config, name, tool_call['function']['arguments']
-                    ))
+            result = json.dumps( call_tool(config, name, tool_call['function']['arguments']))
 
             if not set(['toolcall','debug','result']).intersection(SHUTUP):
                 print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)
             
-            messages.append({
+            messages.extend([{
                 'role': 'assistant',
                 'content': assistant_response if assistant_response else None,
-                'tool_calls': tool_calls
-            })
-            messages.append({
+                'tool_calls': tool_call_list
+            }, {
                 'role': 'tool',
                 'tool_call_id': tool_call['id'],
                 'content': result
-            })
+            }])
         
         req = {'messages': messages, 'stream': True}
         if args.model:
@@ -355,7 +352,7 @@ def main():
                     print(content, end='', flush=True)
                     assistant_response += content
             except Exception as ex:
-                err_out(what="toolcall", message=str(ex), obj=data)
+                err_out(what="toolcall", message=traceback.format_exc(), obj=data)
         print()
 
     if args.conversation:
@@ -365,7 +362,7 @@ def main():
                 with open(args.conversation, 'w') as f:
                     json.dump(messages, f, indent=2)
             except Exception as ex:
-                err_out(what="conversation", message=f"{args.conversation} is unwritable", obj=str(ex), code=126)
+                err_out(what="conversation", message=f"{args.conversation} is unwritable", obj=traceback.format_exc(), code=126)
 
 if __name__ == "__main__":
     try:
@@ -373,4 +370,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt as ex:
         err_out(message=f"Keyboard interrupt")
     #except Exception as ex:
-    #    err_out(message=str(ex))
+    #    err_out(message=traceback.format_exc()

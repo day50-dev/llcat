@@ -2,24 +2,29 @@
 import json, sys, os, subprocess
 from pathlib import Path
 
+tool_name = None
+server_name = "demo"
+
 def rpc(data):
     print(json.dumps({"jsonrpc": "2.0", "result": data}), flush=True)
-    sys.exit(0)
 
-tool_name = None
-while res := sys.stdin.readline():
+for res in sys.stdin: 
     input_data = json.loads(res)
     if input_data['method'] == 'initialize':
-        print('{"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{}},"serverInfo":{"name":"tool demo","version":"1.0.0"}},"jsonrpc":"2.0","id":1}', flush=True)
-        continue
+        rpc({
+            "protocolVersion":"2024-11-05",
+            "capabilities": {
+                "tools":{"listChanged":True},
+                "resources":{"listChanged":True},"completions":{}
+            },
+            "serverInfo":{"name":server_name, "version":"1.0.0"}
+        })
 
-    if input_data['method'] != 'tools/call':
-        continue
-
-    params = input_data.get('params')
-    tool_name = params['name']
-    args = params.get('arguments', {})
-    break
+    if input_data['method'] == 'tools/call':
+        params = input_data.get('params')
+        tool_name = params['name']
+        args = params.get('arguments', {})
+        break
 
 if tool_name == "list_mp3s":
     MP3_DIR = Path(args.get('path') or '.').expanduser()
@@ -31,4 +36,3 @@ elif tool_name == "play_mp3":
     subprocess.Popen(['mpv', '--quiet', Path(args.get('path') or '.').expanduser() / filename])
     rpc({"status": "playing", "file": filename})
 
-sys.exit(1)

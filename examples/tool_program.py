@@ -14,8 +14,7 @@ for res in sys.stdin:
         rpc({
             "protocolVersion":"2024-11-05",
             "capabilities": {
-                "tools":{"listChanged":True},
-                "resources":{"listChanged":True},"completions":{}
+                "tools":{"listChanged":True},"resources":{"listChanged":True},"completions":{}
             },
             "serverInfo":{"name":server_name, "version":"1.0.0"}
         })

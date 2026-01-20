@@ -2,8 +2,9 @@
 import json, sys, os, subprocess
 from pathlib import Path
 
-def rpc(method, params=None):
-    msg = {"jsonrpc": "2.0", "method": method}
+def rpc(data):
+    print(json.dumps({"jsonrpc": "2.0", "result": data}), flush=True)
+    sys.exit(0)
 
 tool_name = None
 while res := sys.stdin.readline():
@@ -15,7 +16,6 @@ while res := sys.stdin.readline():
     if input_data['method'] != 'tools/call':
         continue
 
-    print(input_data)
     params = input_data.get('params')
     tool_name = params['name']
     args = params.get('arguments', {})
@@ -24,11 +24,11 @@ while res := sys.stdin.readline():
 if tool_name == "list_mp3s":
     MP3_DIR = Path(args.get('path') or '.').expanduser()
     mp3s = [f.name for f in MP3_DIR.rglob("*.mp3")]
-    print(json.dumps(mp3s))
+    rpc(mp3s)
 
 elif tool_name == "play_mp3":
     filename = args['filename']
     subprocess.Popen(['mpv', '--quiet', Path(args.get('path') or '.').expanduser() / filename])
-    print(json.dumps({"status": "playing", "file": filename}))
+    rpc({"status": "playing", "file": filename})
 
 sys.exit(1)

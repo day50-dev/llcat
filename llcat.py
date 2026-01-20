@@ -108,7 +108,6 @@ def mcp_start(server_config):
             msg["params"] = params
             msg["id"] = id
 
-        sys.stdout.write(json.dumps(msg) + '\n')
         proc.stdin.write(json.dumps(msg) + '\n')
 
     rpc("initialize", {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "llcat", "version": "1.0"}})
@@ -324,7 +323,6 @@ def main():
             result = json.dumps(
                         call_tool(config, name, tool_call['function']['arguments']
                     ))
-            print(result)
 
             if not set(['toolcall','debug','result']).intersection(SHUTUP):
                 print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)

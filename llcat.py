@@ -172,6 +172,16 @@ def err_out(what="general", message="", obj=None, code=1):
         print(json.dumps(fulldump), file=sys.stderr)
     sys.exit(code)
 
+def tool_gen(res):
+    for line in res.iter_lines():
+        if line:
+            line = line.decode('utf-8')
+            if line.startswith('data: '):
+                data = line[6:]
+                if data == '[DONE]':
+                    break
+                yield data
+
 def main():
     global VERSION
     VERSION = importlib.metadata.version('llcat')
@@ -269,37 +279,32 @@ def main():
     tool_calls = []
     current_tool_call = None
 
-    for line in r.iter_lines():
-        if line:
-            line = line.decode('utf-8')
-            if line.startswith('data: '):
-                data = line[6:]
-                if data == '[DONE]':
-                    break
-                try:
-                    chunk = json.loads(data)
-                    delta = chunk['choices'][0]['delta']
-                    content = delta.get('content', '')
-                    if content:
-                        print(content, end='', flush=True)
-                        assistant_response += content
+    # tool_call is two calls
+    for data in tool_gen(r):
+        try:
+            chunk = json.loads(data)
+            delta = chunk['choices'][0]['delta']
+            content = delta.get('content', '')
+            if content:
+                print(content, end='', flush=True)
+                assistant_response += content
+            
+            if 'tool_calls' in delta:
+                for tc in delta['tool_calls']:
+                    idx = tc.get('index', 0)
+                    if idx >= len(tool_calls):
+                        tool_calls.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
+                        current_tool_call = tool_calls[idx]
                     
-                    if 'tool_calls' in delta:
-                        for tc in delta['tool_calls']:
-                            idx = tc.get('index', 0)
-                            if idx >= len(tool_calls):
-                                tool_calls.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
-                                current_tool_call = tool_calls[idx]
-                            
-                            if 'id' in tc:
-                                tool_calls[idx]['id'] = tc['id']
-                            if 'function' in tc:
-                                if 'name' in tc['function']:
-                                    tool_calls[idx]['function']['name'] += tc['function']['name']
-                                if 'arguments' in tc['function']:
-                                    tool_calls[idx]['function']['arguments'] += tc['function']['arguments']
-                except Exception as ex:
-                    err_out(what="toolcall", message=str(ex), obj=data)
+                    if 'id' in tc:
+                        tool_calls[idx]['id'] = tc['id']
+                    if 'function' in tc:
+                        if 'name' in tc['function']:
+                            tool_calls[idx]['function']['name'] += tc['function']['name']
+                        if 'arguments' in tc['function']:
+                            tool_calls[idx]['function']['arguments'] += tc['function']['arguments']
+        except Exception as ex:
+            err_out(what="toolcall", message=str(ex), obj=data)
 
     if args.tool_program and tool_calls:
         for tool_call in tool_calls:
@@ -354,21 +359,15 @@ def main():
         r = safecall(base_url,req,headers)
 
         assistant_response = ''
-        for line in r.iter_lines():
-            if line:
-                line = line.decode('utf-8')
-                if line.startswith('data: '):
-                    data = line[6:]
-                    if data == '[DONE]':
-                        break
-                    try:
-                        chunk = json.loads(data)
-                        content = chunk['choices'][0]['delta'].get('content', '')
-                        if content:
-                            print(content, end='', flush=True)
-                            assistant_response += content
-                    except Exception as ex:
-                        err_out(what="toolcall", message=str(ex), obj=data)
+        for data in tool_gen(r):
+            try:
+                chunk = json.loads(data)
+                content = chunk['choices'][0]['delta'].get('content', '')
+                if content:
+                    print(content, end='', flush=True)
+                    assistant_response += content
+            except Exception as ex:
+                err_out(what="toolcall", message=str(ex), obj=data)
         print()
 
     if args.conversation:

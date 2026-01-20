@@ -108,6 +108,7 @@ def mcp_start(server_config):
             msg["params"] = params
             msg["id"] = id
 
+        sys.stdout.write(json.dumps(msg) + '\n')
         proc.stdin.write(json.dumps(msg) + '\n')
 
     rpc("initialize", {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "llcat", "version": "1.0"}})
@@ -130,6 +131,9 @@ def discover_tools(server_config):
     return mcp_finish(proc).get('tools')
 
 def call_tool(server_config, tool_name, arguments):
+    if type(arguments) is str:
+        arguments = json.loads(arguments)
+
     proc, rpc = mcp_start(server_config)
     rpc("tools/call", {"name": tool_name, "arguments": arguments})
     return mcp_finish(proc)
@@ -309,14 +313,9 @@ def main():
     if args.tool_program and tool_calls:
         for tool_call in tool_calls:
             fname = tool_call['function']['name']
-            tool_input = json.dumps({
-                'id': tool_call['id'],
-                'name': tool_call['function']['name'],
-                'arguments': json.loads(tool_call['function']['arguments'])
-            })
             
             if not set(['toolcall','debug','request']).intersection(SHUTUP):
-                print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': json.loads(tool_input)}), file=sys.stderr)
+                print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': tool_call}), file=sys.stderr)
             
             if '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program

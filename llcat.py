@@ -92,8 +92,6 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
 
 def mcp_start(server_config):
     """Start MCP server and return (proc, rpc)"""
-    import pdb
-    pdb.set_trace()
     proc = subprocess.Popen(
         [server_config['command']] + server_config['args'],
         stdin=subprocess.PIPE,

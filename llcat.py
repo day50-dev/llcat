@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-import sys, requests, json, argparse, subprocess, select, importlib.metadata, traceback
+import sys, requests, json, argparse, subprocess, select, importlib.metadata, traceback, os
+import logging
+
+logging.basicConfig(level=(os.environ.get('LOGLEVEL') or 'warning').upper())
 
 VERSION = None
 SHUTUP = []
 
 def create_content_with_attachments(text_prompt, attachment_list):
-    import base64, re, os
+    import base64, re
     content = []
     
     for file_path in attachment_list:
@@ -37,8 +40,6 @@ def maybejson(txt):
         return txt
 
 def safeopen(path, what='cli', fmt='json', can_create=False):
-    import os
-
     try:
         flags = 'rb' if fmt == 'bin' else 'r'
 
@@ -69,6 +70,7 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
     headers['HTTP-Referer'] = 'https://github.com/day50-dev/llcat'
 
     try:
+        logging.debug(f"request {req}")
         if what == 'post':
             r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
         else:
@@ -92,11 +94,16 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
 
 def mcp_start(server_config):
     """Start MCP server and return (proc, rpc)"""
+    sub_env = os.environ.copy()
+    sub_env.update(server_config.get('env') or {})
+
     proc = subprocess.Popen(
         [server_config['command']] + server_config['args'],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
-        text=True
+        stderr=subprocess.PIPE,
+        text=True,
+        env=sub_env
     )
 
     id = 0
@@ -119,10 +126,28 @@ def mcp_start(server_config):
 
 def mcp_finish(proc):
     """Flush, read response, terminate, return parsed JSON"""
-    proc.stdin.flush()
-    response = json.loads(proc.stdout.readline())
+    try:
+        proc.stdin.flush()
+    except:
+        pass
+
+    res_json = None
+    response = proc.stderr.read()
+    if response:
+        proc.terminate()
+        err_out(what="toolcall", message=response)
+
+    for line in proc.stdout:
+        response = proc.stdout.readline()
+        try:
+            res_json = json.loads(response)
+        except:
+            pass
+
     proc.terminate()
-    return response.get('result', {})
+    if res_json:
+        return res_json.get('result', {})
+    return response
 
 def discover_tools(server_config):
     proc, rpc = mcp_start(server_config)
@@ -176,6 +201,7 @@ def tool_gen(res):
     for line in res.iter_lines():
         if line:
             line = line.decode('utf-8')
+            logging.debug(f"response: {line}")
             if line.startswith('data: '):
                 data = line[6:]
                 if data == '[DONE]':

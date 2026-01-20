@@ -121,7 +121,11 @@ def mcp_start(server_config):
     rpc("notifications/initialized")
 
     proc.stdin.flush()  
-    proc.stdout.readline()
+
+    rlist, _, _ = select.select([proc.stdout, proc.stderr], [], [], 10.0)
+    if proc.stdout in rlist:
+        proc.stdout.readline()
+
     return proc, rpc
 
 def mcp_finish(proc):
@@ -132,12 +136,14 @@ def mcp_finish(proc):
         pass
 
     res_json = None
-    response = proc.stderr.read()
-    if response:
+    response = None
+    rlist, _, _ = select.select([proc.stdout, proc.stderr], [], [], 10.0)
+    if proc.stderr in rlist:
+        response = proc.stderr.read()
         proc.terminate()
         err_out(what="toolcall", message=response)
 
-    for line in proc.stdout:
+    if proc.stdout in rlist:
         response = proc.stdout.readline()
         try:
             res_json = json.loads(response)
@@ -152,7 +158,10 @@ def mcp_finish(proc):
 def discover_tools(server_config):
     proc, rpc = mcp_start(server_config)
     rpc("tools/list", {})
-    return mcp_finish(proc).get('tools')
+    res = mcp_finish(proc)
+    if type(res) is str: 
+        return res
+    return res.get('tools')
 
 def call_tool(server_config, tool_name, arguments):
     if type(arguments) is str:
@@ -335,14 +344,14 @@ def main():
         except Exception as ex:
             err_out(what="toolcall", message=traceback.format_exc(), obj=data)
 
-    if args.tool_program and tool_call_list:
+    if tool_call_list or args.tool_program:
         for tool_call in tool_call_list:
             fname = tool_call['function']['name']
             
             if not set(['toolcall','debug','request']).intersection(SHUTUP):
                 print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': tool_call}), file=sys.stderr)
             
-            if '/' not in args.tool_program:
+            if args.tool_program and '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program
 
             config, name = mcp_dict_ref[fname]

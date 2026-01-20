@@ -2,9 +2,15 @@
 import json, sys, os, subprocess
 from pathlib import Path
 
-input_data = json.loads(sys.stdin.read())
-tool_name = input_data['name']
-args = input_data.get('arguments', {})
+while res := sys.stdin.readline():
+    try:
+        input_data = json.loads(res)
+        params = input_data.get('params')
+        tool_name = params['name']
+        args = params.get('arguments', {})
+        break
+    except Exception as ex:
+        continue
 
 if tool_name == "list_mp3s":
     MP3_DIR = Path(args.get('path') or '.').expanduser()

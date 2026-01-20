@@ -92,6 +92,8 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
 
 def mcp_start(server_config):
     """Start MCP server and return (proc, rpc)"""
+    import pdb
+    pdb.set_trace()
     proc = subprocess.Popen(
         [server_config['command']] + server_config['args'],
         stdin=subprocess.PIPE,
@@ -162,9 +164,6 @@ def mcp_get_def(path):
             tool_return.append({'type': 'function', 'function': tool})
 
     return tool_return
-
-def mcp_call_tool(name, params):
-    pass
         
 def err_out(what="general", message="", obj=None, code=1):
     if not set(['error',what]).intersection(SHUTUP):
@@ -183,7 +182,7 @@ def tool_gen(res):
                 yield data
 
 def main():
-    global VERSION
+    global VERSION, mcp_dict_ref 
     VERSION = importlib.metadata.version('llcat')
     parser = argparse.ArgumentParser()
 
@@ -245,6 +244,10 @@ def main():
 
     # Tools
     tools = safeopen(args.tool_file) if args.tool_file else None
+    
+    if tools:
+        for tool in tools:
+            mcp_dict_ref[tool['function']['name']] = ({'command':'python','args':[args.tool_program]}, tool['function']['name'])
 
     if args.mcp_file:
         tools = tools or []
@@ -270,7 +273,6 @@ def main():
         req['model'] = args.model
     if tools:
         req['tools'] = tools
-
 
     # The actual call
     r = safecall(base_url,req,headers)
@@ -299,10 +301,10 @@ def main():
                     if 'id' in tc:
                         tool_calls[idx]['id'] = tc['id']
                     if 'function' in tc:
-                        if 'name' in tc['function']:
-                            tool_calls[idx]['function']['name'] += tc['function']['name']
-                        if 'arguments' in tc['function']:
-                            tool_calls[idx]['function']['arguments'] += tc['function']['arguments']
+                        for key in ['name','arguments']:
+                            if key in tc['function']:
+                                tool_calls[idx]['function'][key] += tc['function'][key]
+
         except Exception as ex:
             err_out(what="toolcall", message=str(ex), obj=data)
 
@@ -321,20 +323,11 @@ def main():
             if '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program
 
-            if fname in mcp_dict_ref:
-                ref = mcp_dict_ref[fname]
-                result = json.dumps(
-                        call_tool(
-                            ref[0], ref[1], tool_call['function']['arguments']
-                        ))
-            else:
-                result = subprocess.run(
-                    args.tool_program,
-                    input=tool_input,
-                    capture_output=True,
-                    text=True,
-                    shell=True
-                ).stdout
+            config, name = mcp_dict_ref[fname]
+            result = json.dumps(
+                        call_tool(config, name, tool_call['function']['arguments']
+                    ))
+            print(result)
 
             if not set(['toolcall','debug','result']).intersection(SHUTUP):
                 print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)
@@ -384,5 +377,5 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt as ex:
         err_out(message=f"Keyboard interrupt")
-    except Exception as ex:
-        err_out(message=str(ex))
+    #except Exception as ex:
+    #    err_out(message=str(ex))

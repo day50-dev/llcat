@@ -24,11 +24,9 @@ for res in sys.stdin:
 
 if tool_name == "list_mp3s":
     MP3_DIR = Path(args.get('path') or '.').expanduser()
-    mp3s = [f.name for f in MP3_DIR.rglob("*.mp3")]
-    rpc(mp3s)
+    rpc([f.name for f in MP3_DIR.rglob("*.mp3")])
 
 elif tool_name == "play_mp3":
     filename = args['filename']
     subprocess.Popen(['mpv', '--quiet', Path(args.get('path') or '.').expanduser() / filename])
     rpc({"status": "playing", "file": filename})
-

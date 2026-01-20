@@ -2,9 +2,6 @@
 import json, sys, os, subprocess
 from pathlib import Path
 
-tool_name = None
-server_name = "demo"
-
 def rpc(data):
     print(json.dumps({"jsonrpc": "2.0", "result": data}), flush=True)
 
@@ -16,7 +13,7 @@ for res in sys.stdin:
             "capabilities": {
                 "tools":{"listChanged":True},"resources":{"listChanged":True},"completions":{}
             },
-            "serverInfo":{"name":server_name, "version":"1.0.0"}
+            "serverInfo":{"name":"demo", "version":"1.0.0"}
         })
 
     if input_data['method'] == 'tools/call':

@@ -2,6 +2,7 @@
 import sys, requests, json, argparse, subprocess, select, importlib.metadata
 
 VERSION = None
+SHUTUP = []
 
 def create_content_with_attachments(text_prompt, attachment_list):
     import base64, re, os
@@ -166,8 +167,9 @@ def mcp_call_tool(name, params):
     pass
         
 def err_out(what="general", message="", obj=None, code=1):
-    fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
-    print(json.dumps(fulldump), file=sys.stderr)
+    if not set(['error',what]).intersection(SHUTUP):
+        fulldump={'data': obj, 'level': 'error', 'class': what, 'message': message}
+        print(json.dumps(fulldump), file=sys.stderr)
     sys.exit(code)
 
 def main():
@@ -187,9 +189,14 @@ def main():
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
     parser.add_argument('-a',  '--attach', action='append', help='Attach file(s)')
+    parser.add_argument('-bq', '--be_quiet', action='append', help='Make it shutup about things')
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
+
+    if args.be_quiet:
+        global SHUTUP
+        SHUTUP = set((','.join(args.be_quiet)).split(','))
 
     # Server and headers
     if args.server_url:
@@ -254,6 +261,7 @@ def main():
     if tools:
         req['tools'] = tools
 
+
     # The actual call
     r = safecall(base_url,req,headers)
 
@@ -302,7 +310,8 @@ def main():
                 'arguments': json.loads(tool_call['function']['arguments'])
             })
             
-            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': json.loads(tool_input)}), file=sys.stderr)
+            if not set(['toolcall','debug','request']).intersection(SHUTUP):
+                print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'request', 'obj': json.loads(tool_input)}), file=sys.stderr)
             
             if '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program
@@ -322,7 +331,8 @@ def main():
                     shell=True
                 ).stdout
 
-            print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)
+            if not set(['toolcall','debug','result']).intersection(SHUTUP):
+                print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)
             
             messages.append({
                 'role': 'assistant',

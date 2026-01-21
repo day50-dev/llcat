@@ -1,22 +1,33 @@
 #!/bin/bash
 
+id=0
 while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-      "init")
-        echo '{"jsonrpc":"2.0","id":'$#',"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"mcpcat","version":"1.0"}}}'
-        echo '{"jsonrpc":"2.0","method":"notifications/initialized"}'
-        ;;
-      "list")
-        echo '{"jsonrpc":"2.0","id":'$#',"method":"tools/list","params":{}}'
-        ;;
-      "call")
-        echo '{"jsonrpc":"2.0","id":'$#',"method":"tools/call","params":{"name":"'$2'","arguments":'$3'}}'
-        shift; shift
-        ;;
-      *)
-        echo "Usage: mcpcat [init|list|call]"
-        exit 1
-        ;;
-    esac
-    shift
+  case "$1" in
+    "init")
+      echo '{"jsonrpc":"2.0","id":'$(( id++ ))',"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"mcpcat","version":"1.0"}}}'
+      echo '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+      ;;
+    "list")
+      for which in prompts resources tools; do
+        echo '{"jsonrpc":"2.0","id":'$(( id++ ))',"method":"'$which'/list","params":{}}'
+      done
+      ;;
+
+    get) fn= "prompts/get" ;;
+    read) fn="resources/read" ;;
+    call) fn="tools/call" ;;
+
+    *)
+      echo "Usage: mcpcat [init|list|call|get|read]"
+      exit 1
+      ;;
+  esac
+
+  if [[ -n "$fn" ]] ; then
+    echo '{"jsonrpc":"2.0","id":'$(( id++ ))',"method":"'$fn'","params":{"name":"'$2'","arguments":'$3'}}'
+    shift 2
+    fn=
+  fi
+
+  shift
 done

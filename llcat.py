@@ -122,7 +122,7 @@ def mcp_start(server_config):
 
     proc.stdin.flush()  
 
-    rlist, _, _ = select.select([proc.stdout, proc.stderr], [], [], 10.0)
+    rlist, _, _ = select.select([proc.stdout], [], [], 10.0)
     if proc.stdout in rlist:
         proc.stdout.readline()
 
@@ -137,18 +137,20 @@ def mcp_finish(proc):
 
     res_json = None
     response = None
-    rlist, _, _ = select.select([proc.stdout, proc.stderr], [], [], 10.0)
-    if proc.stderr in rlist:
-        response = proc.stderr.read()
-        proc.terminate()
-        err_out(what="toolcall", message=response)
+    rlist, _, _ = select.select([proc.stdout], [], [], 10.0)
 
-    if proc.stdout in rlist:
+    if rlist:
         response = proc.stdout.readline()
         try:
             res_json = json.loads(response)
         except:
             pass
+    else:
+        rlist, _, _ = select.select([proc.stderr], [], [], 0.0)
+        if proc.stderr in rlist:
+            response = proc.stderr.readline()
+            proc.terminate()
+            err_out(what="toolcall", message=response)
 
     proc.terminate()
     if res_json:

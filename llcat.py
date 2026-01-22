@@ -266,13 +266,16 @@ def main():
         prompt = cli_prompt + stdin_prompt
 
     # Model
-    if args.model == '' and len(prompt) == 0:
+    if len(prompt) == 0:
         r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
 
         try:
             models = r.json()
             for model in models.get('data', []):
-                print(model['id'])
+                if args.model == '':
+                    print(model['id'])
+                elif args.model in [model['id'], '*']:
+                    print(json.dumps(model))
             sys.exit(0)
         except Exception as ex:
             err_out(what="parsing", message=f"{base_url}/models is unparsable json: {ex}", obj=r.text, code=126)

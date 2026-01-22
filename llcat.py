@@ -226,7 +226,7 @@ def main():
 
     # We want to show things in the order of importance
     parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080)')
-    parser.add_argument('-sk', '--server_key', help='Server API key for authorization')
+    parser.add_argument('-sk', '-k', '--server_key', help='Server API key for authorization')
 
     parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
     parser.add_argument('-s',  '--system', help='System prompt')

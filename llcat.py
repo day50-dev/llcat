@@ -266,7 +266,7 @@ def main():
         prompt = cli_prompt + stdin_prompt
 
     # Model
-    if len(prompt) == 0:
+    if len(prompt) == 0 and not args.conversation:
         r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
 
         try:

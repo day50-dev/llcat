@@ -97,8 +97,9 @@ def mcp_start(server_config):
     sub_env = os.environ.copy()
     sub_env.update(server_config.get('env') or {})
 
+    cmd = [server_config['command']] + server_config['args']
     proc = subprocess.Popen(
-        [server_config['command']] + server_config['args'],
+        cmd,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -122,7 +123,9 @@ def mcp_start(server_config):
 
     proc.stdin.flush()  
 
-    rlist, _, _ = select.select([proc.stdout], [], [], 10.0)
+    rlist, _, _ = select.select([proc.stderr, proc.stdout], [], [], 10.0)
+    if proc.stderr in rlist:
+        err_out(what="toolcall", message=proc.stderr.readline(), obj=cmd)
     if proc.stdout in rlist:
         proc.stdout.readline()
 

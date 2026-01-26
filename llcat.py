@@ -235,6 +235,7 @@ def main():
     parser.add_argument('-s',  '--system', help='System prompt')
 
     parser.add_argument('-c',  '--conversation', help='Conversation history file')
+    parser.add_argument('-cr', action='store_true', help="Do not write anything back to the conversation file")
     parser.add_argument('-mf', '--mcp_file', help='MCP file to use')
     parser.add_argument('-tf', '--tool_file', help='JSON file with tool definitions')
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
@@ -398,7 +399,7 @@ def main():
                 err_out(what="toolcall", message=traceback.format_exc(), obj=data)
         print()
 
-    if args.conversation:
+    if args.conversation and not args.cr:
         if len(assistant_response):
             messages.append({'role': 'assistant', 'content': assistant_response})
             try:

@@ -221,8 +221,9 @@ Now it's your turn.
 
 ```shell
 usage: llcat [-h] [-su SERVER_URL] [-sk SERVER_KEY] [-m [MODEL]]
-             [-s SYSTEM] [-c CONVERSATION] [-mf MCP_FILE] [-tf TOOL_FILE]
-             [-tp TOOL_PROGRAM] [-a ATTACH] [--version]
+             [-s SYSTEM] [-c CONVERSATION] [-cr] [-mf MCP_FILE]
+             [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH] [-bq BE_QUIET]
+             [--version]
              [user_prompt ...]
 
 positional arguments:
@@ -232,12 +233,13 @@ options:
   -h, --help            show this help message and exit
   -su, -u, --server_url SERVER_URL
                         Server URL (e.g., http://::1:8080)
-  -sk, --server_key SERVER_KEY
+  -sk, -k, --server_key SERVER_KEY
                         Server API key for authorization
   -m, --model [MODEL]   Model to use (or list models if no value)
   -s, --system SYSTEM   System prompt
   -c, --conversation CONVERSATION
                         Conversation history file
+  -cr                   Do not write anything back to the conversation file
   -mf, --mcp_file MCP_FILE
                         MCP file to use
   -tf, --tool_file TOOL_FILE
@@ -245,6 +247,8 @@ options:
   -tp, --tool_program TOOL_PROGRAM
                         Program to execute tool calls
   -a, --attach ATTACH   Attach file(s)
+  -bq, --be_quiet BE_QUIET
+                        Make it shutup about things
   --version             show program's version number and exit
 ```
 

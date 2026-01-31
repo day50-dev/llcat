@@ -65,14 +65,38 @@ def safeopen(path, what='cli', fmt='json', can_create=False):
     except Exception as ex:
         err_out(what=what, message=f"{path} cannot be loaded", obj=traceback.format_exc(), code=126)
 
-def safecall(base_url, req = None, headers = {}, what = "post"):
+def safecall(base_url, req = None, headers = {}, what = "post", transport="openai"):
     headers['User-Agent'] = headers['X-Title'] = 'llcat'
     headers['HTTP-Referer'] = 'https://github.com/day50-dev/llcat'
 
     try:
         logging.debug(f"request {req}")
         if what == 'post':
-            r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+            if transport == 'ollama':
+                if req and 'messages' in req:
+                    req = req.copy()
+                    new_msgs = []
+                    for m in req['messages']:
+                        nm = {'role': m['role']}
+                        if isinstance(m.get('content'), list):
+                            txt = []
+                            imgs = []
+                            for c in m['content']:
+                                if c.get('type') == 'text':
+                                    txt.append(c.get('text', ''))
+                                elif c.get('type') == 'image' and 'source' in c:
+                                    imgs.append(c['source']['data'])
+                            nm['content'] = '\n'.join(txt)
+                            if imgs:
+                                nm['images'] = imgs
+                        else:
+                            nm['content'] = m.get('content')
+                        new_msgs.append(nm)
+                    req['messages'] = new_msgs
+
+                r = requests.post(f'{base_url}/api/chat', json=req, headers=headers, stream=True)
+            else:
+                r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
         else:
             r = requests.get(base_url, headers=headers, stream=True)
 
@@ -211,12 +235,40 @@ def err_out(what="general", message="", obj=None, code=1):
         print(json.dumps(fulldump), file=sys.stderr)
     sys.exit(code)
 
-def tool_gen(res):
+def tool_gen(res, transport="openai"):
     for line in res.iter_lines():
         if line:
             line = line.decode('utf-8')
             logging.debug(f"response: {line}")
-            if line.startswith('data: '):
+            if transport == 'ollama':
+                try:
+                    obj = json.loads(line)
+                    delta = {}
+                    if 'message' in obj:
+                        msg = obj['message']
+                        if 'content' in msg:
+                            delta['content'] = msg['content']
+                        if 'tool_calls' in msg:
+                             tc_list = []
+                             for i, tc in enumerate(msg['tool_calls']):
+                                 tc_list.append({
+                                     'index': i,
+                                     'id': 'call_'+str(i), 
+                                     'function': {
+                                         'name': tc['function']['name'],
+                                         'arguments': json.dumps(tc['function']['arguments'])
+                                     }
+                                 })
+                             delta['tool_calls'] = tc_list
+                    
+                    if delta:
+                        yield json.dumps({'choices': [{'delta': delta}]})
+                    
+                    if obj.get('done'):
+                        break
+                except:
+                    pass
+            elif line.startswith('data: '):
                 data = line[6:]
                 if data == '[DONE]':
                     break
@@ -229,6 +281,7 @@ def main():
 
     # We want to show things in the order of importance
     parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080)')
+    parser.add_argument('-t', '--transport', default='openai', choices=['openai', 'ollama'], help='Transport to use (openai or ollama)')
     parser.add_argument('-sk', '-k', '--server_key', help='Server API key for authorization')
 
     parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
@@ -251,7 +304,12 @@ def main():
 
     # Server and headers
     if args.server_url:
-        base_url = args.server_url.rstrip('/').rstrip('/v1') + '/v1'
+        if args.transport == 'ollama':
+             base_url = args.server_url.rstrip('/')
+        else:
+             base_url = args.server_url.rstrip('/').rstrip('/v1') + '/v1'
+    elif args.transport == 'ollama':
+        base_url = 'http://localhost:11434'
     else:
         parser.print_help()
         err_out(what="cli", message="No server URL specified", code=2)
@@ -271,11 +329,21 @@ def main():
 
     # Model
     if not args.model or (len(prompt) == 0 and not args.conversation):
-        r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
+        if args.transport == 'ollama':
+             r = safecall(base_url=f'{base_url}/api/tags', headers=headers, what='get', transport=args.transport)
+        else:
+             r = safecall(base_url=f'{base_url}/models', headers=headers, what='get', transport=args.transport)
 
         try:
-            models = r.json()
-            for model in models.get('data', []):
+            resp = r.json()
+            models = []
+            if 'data' in resp:
+                models = resp['data']
+            elif 'models' in resp:
+                for m in resp['models']:
+                    models.append({'id': m['name']})
+            
+            for model in models:
                 if args.model == '':
                     print(model['id'])
                 elif args.model in [model['id'], '*']:
@@ -320,14 +388,14 @@ def main():
         req['tools'] = tools
 
     # The actual call
-    r = safecall(base_url,req,headers)
+    r = safecall(base_url,req,headers, transport=args.transport)
 
     assistant_response = ''
     tool_call_list = []
     current_tool_call = None
 
     # tool_call is two calls
-    for data in tool_gen(r):
+    for data in tool_gen(r, transport=args.transport):
         try:
             chunk = json.loads(data)
             delta = chunk['choices'][0]['delta']
@@ -385,10 +453,10 @@ def main():
         if tools:
             req['tools'] = tools
         
-        r = safecall(base_url,req,headers)
+        r = safecall(base_url,req,headers, transport=args.transport)
 
         assistant_response = ''
-        for data in tool_gen(r):
+        for data in tool_gen(r, transport=args.transport):
             try:
                 chunk = json.loads(data)
                 content = chunk['choices'][0]['delta'].get('content', '')

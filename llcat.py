@@ -431,6 +431,9 @@ def main():
             if args.tool_program and '/' not in args.tool_program:
                 args.tool_program = './' + args.tool_program
 
+            if fname not in mcp_dict_ref:
+                err_out(what="toolcall", message=f"{fname} is not a tool")
+
             config, name = mcp_dict_ref[fname]
             result = json.dumps( call_tool(config, name, tool_call['function']['arguments']))
 

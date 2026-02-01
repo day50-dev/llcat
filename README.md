@@ -134,7 +134,7 @@ for model in $($pre -m); do
 done
 ```
 
-You can use patterns like that also for testing tool calling completion.
+You can use patterns like that also for testing tool calling completion. [Here's a bigger example: a humor eval to see if models know a funny joke when they see one](https://github.com/kristopolous/humor-evals)
 
 If an error happens contacting the server, you get the request, response, and a non-zero exit.
 

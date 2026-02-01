@@ -360,7 +360,8 @@ def main():
     
     if tools:
         for tool in tools:
-            mcp_dict_ref[tool['function']['name']] = ({'command':'python','args':[args.tool_program]}, tool['function']['name'])
+            # we demand the tool program is executable
+            mcp_dict_ref[tool['function']['name']] = ({'command':args.tool_program,'args':[]}, tool['function']['name'])
 
     if args.mcp_file:
         tools = tools or []

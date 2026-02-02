@@ -208,6 +208,8 @@ def mcp_get_def(path):
     global mcp_dict_ref
     tool_return = []
     for server_name, server_config in config.get('mcpServers').items():
+        if server_config.get("disabled"):
+            continue
         safe_name = re.sub(r'[^a-z0-9_]', '_', server_name.lower())
         counter = 0
         
@@ -356,11 +358,11 @@ def main():
     messages = safeopen(args.conversation, can_create=True) if args.conversation else []
 
     # Tools
-    tools = safeopen(args.tool_file) if args.tool_file else None
-    
-    if tools:
+    tools = None
+    if args.tool_file:
+        tools = safeopen(args.tool_file)
         for tool in tools:
-            # we demand the tool program is executable
+            # we demand the tool program to be executable
             mcp_dict_ref[tool['function']['name']] = ({'command':args.tool_program,'args':[]}, tool['function']['name'])
 
     if args.mcp_file:
@@ -387,6 +389,8 @@ def main():
         req['model'] = args.model
     if tools:
         req['tools'] = tools
+        from pprint import pprint
+        pprint(req['tools'])
 
     # The actual call
     r = safecall(base_url,req,headers, transport=args.transport)

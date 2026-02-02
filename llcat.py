@@ -242,35 +242,7 @@ def tool_gen(res, transport="openai"):
         if line:
             line = line.decode('utf-8')
             logging.debug(f"response: {line}")
-            if transport == 'ollama':
-                try:
-                    obj = json.loads(line)
-                    delta = {}
-                    if 'message' in obj:
-                        msg = obj['message']
-                        if 'content' in msg:
-                            delta['content'] = msg['content']
-                        if 'tool_calls' in msg:
-                             tc_list = []
-                             for i, tc in enumerate(msg['tool_calls']):
-                                 tc_list.append({
-                                     'index': i,
-                                     'id': 'call_'+str(i), 
-                                     'function': {
-                                         'name': tc['function']['name'],
-                                         'arguments': json.dumps(tc['function']['arguments'])
-                                     }
-                                 })
-                             delta['tool_calls'] = tc_list
-                    
-                    if delta:
-                        yield json.dumps({'choices': [{'delta': delta}]})
-                    
-                    if obj.get('done'):
-                        break
-                except:
-                    pass
-            elif line.startswith('data: '):
+            if line.startswith('data: '):
                 data = line[6:]
                 if data == '[DONE]':
                     break
@@ -443,15 +415,11 @@ def main():
             if not set(['toolcall','debug','result']).intersection(SHUTUP):
                 print(json.dumps({'level':'debug', 'class': 'toolcall', 'message': 'result', 'obj': maybejson(result)}), file=sys.stderr)
             
-            messages.extend([{
-                'role': 'assistant',
-                'content': assistant_response if assistant_response else None,
-                'tool_calls': tool_call_list
-            }, {
+            messages.append({
                 'role': 'tool',
                 'tool_call_id': tool_call['id'],
                 'content': result
-            }])
+            })
         
         req = {'messages': messages, 'stream': True}
         if args.model:

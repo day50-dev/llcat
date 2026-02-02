@@ -389,8 +389,6 @@ def main():
         req['model'] = args.model
     if tools:
         req['tools'] = tools
-        from pprint import pprint
-        pprint(req['tools'])
 
     # The actual call
     r = safecall(base_url,req,headers, transport=args.transport)

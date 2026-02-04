@@ -250,7 +250,11 @@ def tool_gen(res, transport="openai"):
 
 def main():
     global VERSION, mcp_dict_ref 
-    VERSION = importlib.metadata.version('llcat')
+    try:
+        VERSION = importlib.metadata.version('llcat')
+    except:
+        VERSION = "git"
+
     parser = argparse.ArgumentParser()
 
     # We want to show things in the order of importance
@@ -258,7 +262,7 @@ def main():
     parser.add_argument('-t', '--transport', default='openai', choices=['openai', 'ollama'], help='Transport to use (openai or ollama)')
     parser.add_argument('-sk', '-k', '--server_key', help='Server API key for authorization')
 
-    parser.add_argument('-m',  '--model', nargs='?', const='', help='Model to use (or list models if no value)')
+    parser.add_argument('-m',  '--model', nargs='?', const='', default='any', help='Model to use (or list models if no value)')
     parser.add_argument('-s',  '--system', help='System prompt')
 
     parser.add_argument('-c',  '--conversation', help='Conversation history file')
@@ -356,9 +360,12 @@ def main():
     messages.append({'role': 'user', 'content': message_content})
 
     # Request construction
-    req = {'messages': messages, 'stream': True}
-    if args.model:
-        req['model'] = args.model
+    req = {
+        'model': args.model,
+        'messages': messages, 
+        'stream': True
+    }
+
     if tools:
         req['tools'] = tools
 

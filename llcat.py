@@ -213,7 +213,7 @@ def err_out(what="general", message="", obj=None, code=1):
         print(json.dumps(fulldump), file=sys.stderr)
     sys.exit(code)
 
-def tool_gen(res, transport="openai"):
+def tool_gen(res):
     for line in res.iter_lines():
         if line:
             line = line.decode('utf-8')
@@ -284,7 +284,7 @@ def main():
 
     # Model
     if not args.model or (len(prompt) == 0 and not args.conversation):
-        r = safecall(base_url=f'{base_url}/models', headers=headers, what='get', transport=args.transport)
+        r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
 
         try:
             resp = r.json()
@@ -344,14 +344,14 @@ def main():
         req['tools'] = tools
 
     # The actual call
-    r = safecall(base_url,req,headers, transport=args.transport)
+    r = safecall(base_url,req,headers)
 
     assistant_response = ''
     tool_call_list = []
     current_tool_call = None
 
     # tool_call is two calls
-    for data in tool_gen(r, transport=args.transport):
+    for data in tool_gen(r):
         try:
             chunk = json.loads(data)
             delta = chunk['choices'][0]['delta']
@@ -408,10 +408,10 @@ def main():
         if tools:
             req['tools'] = tools
         
-        r = safecall(base_url,req,headers, transport=args.transport)
+        r = safecall(base_url,req,headers)
 
         assistant_response = ''
-        for data in tool_gen(r, transport=args.transport):
+        for data in tool_gen(r):
             try:
                 chunk = json.loads(data)
                 content = chunk['choices'][0]['delta'].get('content', '')

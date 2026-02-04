@@ -272,6 +272,7 @@ def main():
     parser.add_argument('-tp', '--tool_program', help='Program to execute tool calls')
     parser.add_argument('-a',  '--attach', action='append', help='Attach file(s)')
     parser.add_argument('-bq', '--be_quiet', action='append', help='Make it shutup about things')
+    parser.add_argument('-nw', '--no_wrap', action='store_true', help='Do not wrap inputs in <xml-like-syntax>')
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
@@ -300,7 +301,7 @@ def main():
     cli_prompt = ' '.join(args.user_prompt) if args.user_prompt else ''
     stdin_prompt = sys.stdin.read() if select.select([sys.stdin], [], [], 0.0)[0] else ''
 
-    if len(stdin_prompt) and len(cli_prompt):
+    if (not args.no_wrap) and len(stdin_prompt) and len(cli_prompt):
         prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}</content>"
     else:
         prompt = cli_prompt + stdin_prompt

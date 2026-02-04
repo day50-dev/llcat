@@ -72,31 +72,7 @@ def safecall(base_url, req = None, headers = {}, what = "post", transport="opena
     try:
         logging.debug(f"request {req}")
         if what == 'post':
-            if transport == 'ollama':
-                if req and 'messages' in req:
-                    req = req.copy()
-                    new_msgs = []
-                    for m in req['messages']:
-                        nm = {'role': m['role']}
-                        if isinstance(m.get('content'), list):
-                            txt = []
-                            imgs = []
-                            for c in m['content']:
-                                if c.get('type') == 'text':
-                                    txt.append(c.get('text', ''))
-                                elif c.get('type') == 'image' and 'source' in c:
-                                    imgs.append(c['source']['data'])
-                            nm['content'] = '\n'.join(txt)
-                            if imgs:
-                                nm['images'] = imgs
-                        else:
-                            nm['content'] = m.get('content')
-                        new_msgs.append(nm)
-                    req['messages'] = new_msgs
-
-                r = requests.post(f'{base_url}/api/chat', json=req, headers=headers, stream=True)
-            else:
-                r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+            r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
         else:
             r = requests.get(base_url, headers=headers, stream=True)
 
@@ -259,7 +235,6 @@ def main():
 
     # We want to show things in the order of importance
     parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080)')
-    parser.add_argument('-t', '--transport', default='openai', choices=['openai', 'ollama'], help='Transport to use (openai or ollama)')
     parser.add_argument('-sk', '-k', '--server_key', help='Server API key for authorization')
 
     parser.add_argument('-m',  '--model', nargs='?', const='', default='any', help='Model to use (or list models if no value)')
@@ -283,15 +258,7 @@ def main():
 
     # Server and headers
     if args.server_url:
-        if args.transport == 'ollama':
-             base_url = args.server_url.rstrip('/')
-        else:
-             base_url = args.server_url.rstrip('/').rstrip('/v1') + '/v1'
-    elif args.transport == 'ollama':
-        base_url = 'http://localhost:11434'
-    else:
-        parser.print_help()
-        err_out(what="cli", message="No server URL specified", code=2)
+        base_url = args.server_url.rstrip('/').rstrip('/v1') + '/v1'
 
     headers = {'Content-Type': 'application/json'}
     if args.server_key:
@@ -304,14 +271,20 @@ def main():
     if (not args.no_wrap) and len(stdin_prompt) and len(cli_prompt):
         prompt = f"<ask>{cli_prompt}</ask><content>{stdin_prompt}</content>"
     else:
+        if len(cli_prompt):
+            cli_prompt += "\n"
         prompt = cli_prompt + stdin_prompt
+    
+    if not args.server_url:
+        if len(prompt) == 0:
+            parser.print_help()
+        else:
+            print(prompt)
+        sys.exit(0)
 
     # Model
     if not args.model or (len(prompt) == 0 and not args.conversation):
-        if args.transport == 'ollama':
-             r = safecall(base_url=f'{base_url}/api/tags', headers=headers, what='get', transport=args.transport)
-        else:
-             r = safecall(base_url=f'{base_url}/models', headers=headers, what='get', transport=args.transport)
+        r = safecall(base_url=f'{base_url}/models', headers=headers, what='get', transport=args.transport)
 
         try:
             resp = r.json()

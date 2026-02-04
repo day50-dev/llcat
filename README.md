@@ -182,6 +182,20 @@ This file is what you usually need to make for an mcp server definition:
 }
 ```
 
+There's a basic extension on MCP here. You can explicity disable an MCP server by adding a flag `"disabled": true` like so:
+
+```json
+{
+  "mcpServers": {
+    "<some_server>": {
+      "command": "<some_command>",
+      "disabled": true,
+      "args": ["<some>", "<args>"]
+    }
+    ...
+  }
+}
+```
 
 ### MCPCat
 MCP can be simple with simple tools. There's one included here. `mcpcat` is a 22 line Bash script. 

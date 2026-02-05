@@ -234,10 +234,16 @@ There's ways of doing the network transports with this script as well. All you n
 Now it's your turn. 
 
 ```shell
-usage: llcat [-h] [-su SERVER_URL] [-t {openai,ollama}] [-sk SERVER_KEY] [-m [MODEL]] [-s SYSTEM]
-             [-c CONVERSATION] [-cr] [-mf MCP_FILE] [-tf TOOL_FILE] [-tp TOOL_PROGRAM] [-a ATTACH]
-             [-bq BE_QUIET] [--version]
+usage: llcat [-h] [-su SERVER_URL] [-sk SERVER_KEY] [-m [MODEL]] [-s SYSTEM]
+             [-c CONVERSATION] [-cr] [-mf MCP_FILE] [-tf TOOL_FILE]
+             [-tp TOOL_PROGRAM] [-a ATTACH] [-bq BE_QUIET] [-nw] [--version]
              [user_prompt ...]
+
+llcat is /usr/bin/cat for LLMs. 
+
+        🐱 Me-wow! 
+
+https://github.com/day50-dev/llcat
 
 positional arguments:
   user_prompt           Your prompt
@@ -246,8 +252,6 @@ options:
   -h, --help            show this help message and exit
   -su, -u, --server_url SERVER_URL
                         Server URL (e.g., http://::1:8080)
-  -t, --transport {openai,ollama}
-                        Transport to use (openai or ollama)
   -sk, -k, --server_key SERVER_KEY
                         Server API key for authorization
   -m, --model [MODEL]   Model to use (or list models if no value)
@@ -264,6 +268,7 @@ options:
   -a, --attach ATTACH   Attach file(s)
   -bq, --be_quiet BE_QUIET
                         Make it shutup about things
+  -nw, --no_wrap        Do not wrap inputs in <xml-like-syntax>
   --version             show program's version number and exit
 ```
 

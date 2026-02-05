@@ -65,7 +65,7 @@ def safeopen(path, what='cli', fmt='json', can_create=False):
     except Exception as ex:
         err_out(what=what, message=f"{path} cannot be loaded", obj=traceback.format_exc(), code=126)
 
-def safecall(base_url, req = None, headers = {}, what = "post", transport="openai"):
+def safecall(base_url, req = None, headers = {}, what = "post"):
     headers['User-Agent'] = headers['X-Title'] = 'llcat'
     headers['HTTP-Referer'] = 'https://github.com/day50-dev/llcat'
 
@@ -231,7 +231,14 @@ def main():
     except:
         VERSION = "git"
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="""
+llcat is /usr/bin/cat for LLMs. 
+
+        🐱 Me-wow! 
+
+https://github.com/day50-dev/llcat""")
 
     # We want to show things in the order of importance
     parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080)')

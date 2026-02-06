@@ -351,40 +351,38 @@ https://github.com/day50-dev/llcat""")
         req['tools'] = tools
 
     # The actual call
-    r = safecall(base_url,req,headers)
 
     assistant_response = ''
-    tool_call_list = []
-    current_tool_call = None
 
-    # tool_call is two calls
-    for data in tool_gen(r):
-        try:
-            chunk = json.loads(data)
-            delta = chunk['choices'][0]['delta']
-            content = delta.get('content', '')
-            if content:
-                print(content, end='', flush=True)
-                assistant_response += content
-            
-            if 'tool_calls' in delta:
-                for tc in delta['tool_calls']:
-                    idx = tc.get('index', 0)
-                    if idx >= len(tool_call_list):
-                        tool_call_list.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
-                        current_tool_call = tool_call_list[idx]
-                    
-                    if 'id' in tc:
-                        tool_call_list[idx]['id'] = tc['id']
-                    if 'function' in tc:
-                        for key in ['name','arguments']:
-                            if key in tc['function']:
-                                tool_call_list[idx]['function'][key] += tc['function'][key]
+    while True:
+        r = safecall(base_url,req,headers)
+        tool_call_list = []
 
-        except Exception as ex:
-            err_out(what="toolcall", message=traceback.format_exc(), obj=data)
+        for data in tool_gen(r):
+            try:
+                chunk = json.loads(data)
+                delta = chunk['choices'][0]['delta']
+                content = delta.get('content', '')
+                if content:
+                    print(content, end='', flush=True)
+                    assistant_response += content
+                
+                if 'tool_calls' in delta:
+                    for tc in delta['tool_calls']:
+                        idx = tc.get('index', 0)
+                        if idx >= len(tool_call_list):
+                            tool_call_list.append({'id': '', 'type': 'function', 'function': {'name': '', 'arguments': ''}})
+                        
+                        if 'id' in tc:
+                            tool_call_list[idx]['id'] = tc['id']
+                        if 'function' in tc:
+                            for key in ['name','arguments']:
+                                if key in tc['function']:
+                                    tool_call_list[idx]['function'][key] += tc['function'][key]
 
-    if tool_call_list or args.tool_program:
+            except Exception as ex:
+                err_out(what="toolcall", message=traceback.format_exc(), obj=data)
+
         for tool_call in tool_call_list:
             fname = tool_call['function']['name']
             
@@ -414,20 +412,9 @@ https://github.com/day50-dev/llcat""")
             req['model'] = args.model
         if tools:
             req['tools'] = tools
-        
-        r = safecall(base_url,req,headers)
 
-        assistant_response = ''
-        for data in tool_gen(r):
-            try:
-                chunk = json.loads(data)
-                content = chunk['choices'][0]['delta'].get('content', '')
-                if content:
-                    print(content, end='', flush=True)
-                    assistant_response += content
-            except Exception as ex:
-                err_out(what="toolcall", message=traceback.format_exc(), obj=data)
-        print()
+        if len(tool_call_list) == 0:
+            break
 
     if args.conversation and not args.cr:
         if len(assistant_response):

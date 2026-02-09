@@ -237,6 +237,7 @@ Now it's your turn.
 usage: llcat [-h] [-su SERVER_URL] [-sk SERVER_KEY] [-m [MODEL]] [-s SYSTEM]
              [-c CONVERSATION] [-cr] [-mf MCP_FILE] [-tf TOOL_FILE]
              [-tp TOOL_PROGRAM] [-a ATTACH] [-bq BE_QUIET] [-nw] [--version]
+             [--info [INFO]]
              [user_prompt ...]
 
 llcat is /usr/bin/cat for LLMs. 
@@ -270,6 +271,7 @@ options:
                         Make it shutup about things
   -nw, --no_wrap        Do not wrap inputs in <xml-like-syntax>
   --version             show program's version number and exit
+  --info [INFO]         Get the info for a model
 ```
 
 We're excited to see what you build.

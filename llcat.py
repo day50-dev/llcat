@@ -72,7 +72,7 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
     try:
         logging.debug(f"request {req}")
         if what == 'post':
-            r = requests.post(f'{base_url}/chat/completions', json=req, headers=headers, stream=True)
+            r = requests.post(base_url, json=req, headers=headers, stream=True)
         else:
             r = requests.get(base_url, headers=headers, stream=True)
 
@@ -256,6 +256,7 @@ https://github.com/day50-dev/llcat""")
     parser.add_argument('-bq', '--be_quiet', action='append', help='Make it shutup about things')
     parser.add_argument('-nw', '--no_wrap', action='store_true', help='Do not wrap inputs in <xml-like-syntax>')
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
+    parser.add_argument('--info', nargs='?', const='caps', help='Get the info for a model')
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
 
@@ -265,7 +266,7 @@ https://github.com/day50-dev/llcat""")
 
     # Server and headers
     if args.server_url:
-        base_url = args.server_url.rstrip('/').rstrip('/v1') + '/v1'
+        base_url = args.server_url.rstrip('/').rstrip('/v1')
 
     headers = {'Content-Type': 'application/json'}
     if args.server_key:
@@ -291,25 +292,35 @@ https://github.com/day50-dev/llcat""")
 
     # Model
     if not args.model or (len(prompt) == 0 and not args.conversation):
-        r = safecall(base_url=f'{base_url}/models', headers=headers, what='get')
+        r = safecall(base_url=f'{base_url}/v1/models', headers=headers, what='get')
 
         try:
             resp = r.json()
-            models = []
-            if 'data' in resp:
-                models = resp['data']
-            elif 'models' in resp:
-                for m in resp['models']:
-                    models.append({'id': m['name']})
+            models = resp.get('data') or resp.get('models')
             
             for model in models:
                 if args.model == '':
                     print(model['id'])
                 elif args.model in [model['id'], '*']:
-                    print(json.dumps(model))
+                    params = model.get('supported_parameters')
+                    if params:
+                        if args.info:
+                            print(json.dumps(params))
+                        else:
+                            print(json.dumps(model))
+                        sys.exit(0)
+
+            if args.model != '':
+                r = safecall(base_url=f'{base_url}/api/show', req={"model":args.model}, headers=headers)
+                if args.info:
+                    print(json.dumps(r.json().get('capabilities')))
+                else:
+                    print(json.dumps(r.json()))
+
             sys.exit(0)
         except Exception as ex:
             err_out(what="parsing", message=f"{base_url}/models is unparsable json: {ex}", obj=r.text, code=126)
+
 
     # Conversation
     messages = safeopen(args.conversation, can_create=True) if args.conversation else []
@@ -355,7 +366,7 @@ https://github.com/day50-dev/llcat""")
     assistant_response = ''
 
     while True:
-        r = safecall(base_url,req,headers)
+        r = safecall(f'{base_url}/v1/chat/completions',req,headers)
         tool_call_list = []
 
         for data in tool_gen(r):

@@ -1,10 +1,4 @@
-Ok what about this
-
-Here is the revised specification with the colon added to the allowed characters in the model identifier syntax.
-
----
-
-Model Address Standard (MAS) v1.0
+## Model Address Standard (MAS) v1.0
 
 Version: 1.0
 Status: Draft

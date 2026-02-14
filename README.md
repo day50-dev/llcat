@@ -48,7 +48,7 @@ $ llcat -u https://openrouter.ai/api \
         "What is the capital of France?"
 ```
 
-Continue it with Qwen using [MSA format](https://day50.dev/msa.html):
+Continue it with Qwen using [MAS format](https://day50.dev/mas.html):
 ```
 $ llcat -u "https://openrouter.ai/api#m=qwen/qwen3-4b:free"
         -c /tmp/convo.txt \

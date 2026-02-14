@@ -241,7 +241,7 @@ llcat is /usr/bin/cat for LLMs.
 https://github.com/day50-dev/llcat""")
 
     # We want to show things in the order of importance
-    parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080)')
+    parser.add_argument('-su', '-u', '--server_url', help='Server URL (e.g., http://::1:8080). Also supports MSA format')
     parser.add_argument('-sk', '-k', '--server_key', help='Server API key for authorization')
 
     parser.add_argument('-m',  '--model', nargs='?', const='', default='any', help='Model to use (or list models if no value)')
@@ -266,7 +266,17 @@ https://github.com/day50-dev/llcat""")
 
     # Server and headers
     if args.server_url:
-        base_url = args.server_url.rstrip('/').rstrip('/v1')
+
+        # MAS support (https://day50.dev/mas.html)
+        if '#' in args.server_url:
+            from urllib.parse import parse_qs, parse_qsl
+            lhs, rhs = args.server_url.split('#')
+            params = parse_qs(rhs, keep_blank_values=True)
+            args.model = params.get('m')[0]
+        else:
+            lhs = args.server_url
+
+        base_url = lhs.rstrip('/').rstrip('/v1')
 
     headers = {'Content-Type': 'application/json'}
     if args.server_key:

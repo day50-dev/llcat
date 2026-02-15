@@ -6,6 +6,7 @@ logging.basicConfig(level=(os.environ.get('LOGLEVEL') or 'warning').upper())
 
 VERSION = None
 SHUTUP = []
+CURLIFY = False
 
 def create_content_with_attachments(text_prompt, attachment_list):
     import base64, re
@@ -75,6 +76,10 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
             r = requests.post(base_url, json=req, headers=headers, stream=True)
         else:
             r = requests.get(base_url, headers=headers, stream=True)
+
+        if CURLIFY:
+            import curlify
+            logging.warning(curlify.to_curl(r.request))
 
         r.raise_for_status()  
 
@@ -225,7 +230,8 @@ def tool_gen(res):
                 yield data
 
 def main():
-    global VERSION, mcp_dict_ref 
+    global CURLIFY, VERSION, mcp_dict_ref 
+
     try:
         VERSION = importlib.metadata.version('llcat')
     except:
@@ -255,10 +261,14 @@ https://github.com/day50-dev/llcat""")
     parser.add_argument('-a',  '--attach', action='append', help='Attach file(s)')
     parser.add_argument('-bq', '--be_quiet', action='append', help='Make it shutup about things')
     parser.add_argument('-nw', '--no_wrap', action='store_true', help='Do not wrap inputs in <xml-like-syntax>')
+    parser.add_argument('--curlify', action='store_true', help="Write curl equivalents of calls to stdout")
     parser.add_argument('--version', action='version', version='%(prog)s ' + VERSION)
     parser.add_argument('--info', nargs='?', const='caps', help='Get the info for a model')
     parser.add_argument('user_prompt', nargs='*', help='Your prompt')
     args = parser.parse_args()
+
+    if args.curlify:
+        CURLIFY = True
 
     if args.be_quiet:
         global SHUTUP

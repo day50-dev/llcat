@@ -79,7 +79,7 @@ def safecall(base_url, req = None, headers = {}, what = "post"):
 
         if CURLIFY:
             import curlify
-            logging.warning(curlify.to_curl(r.request))
+            print(curlify.to_curl(r.request), file=sys.stderr)
 
         r.raise_for_status()  
 
@@ -393,7 +393,7 @@ https://github.com/day50-dev/llcat""")
             try:
                 chunk = json.loads(data)
                 delta = chunk['choices'][0]['delta']
-                content = delta.get('content', '')
+                content = delta.get('content', delta.get('reasoning', ''))
                 if content:
                     print(content, end='', flush=True)
                     assistant_response += content

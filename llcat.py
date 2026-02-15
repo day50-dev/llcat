@@ -389,12 +389,25 @@ https://github.com/day50-dev/llcat""")
         r = safecall(f'{base_url}/v1/chat/completions',req,headers)
         tool_call_list = []
 
+        is_thinking = False
         for data in tool_gen(r):
             try:
                 chunk = json.loads(data)
                 delta = chunk['choices'][0]['delta']
-                content = delta.get('content', delta.get('reasoning', ''))
-                if content:
+                content = delta.get('content', '') 
+                reasoning = delta.get('reasoning', '')
+                if reasoning:
+                    if not is_thinking:
+                        print("<think>")
+                        is_thinking = True
+
+                    print(reasoning, end='', flush=True)
+
+                elif content:
+                    if is_thinking:
+                        print("</think>")
+                        is_thinking = False
+
                     print(content, end='', flush=True)
                     assistant_response += content
                 

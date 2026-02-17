@@ -282,6 +282,7 @@ https://github.com/day50-dev/llcat""")
             from urllib.parse import parse_qs, parse_qsl
             lhs, rhs = args.server_url.split('#')
             params = parse_qs(rhs, keep_blank_values=True)
+            print(params)
             args.model = params.get('m')[0]
         else:
             lhs = args.server_url
@@ -405,7 +406,7 @@ https://github.com/day50-dev/llcat""")
 
                 elif content:
                     if is_thinking:
-                        print("</think>")
+                        print("\n</think>")
                         is_thinking = False
 
                     print(content, end='', flush=True)

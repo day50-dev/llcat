@@ -397,7 +397,7 @@ https://github.com/day50-dev/llcat""")
                 delta = chunk['choices'][0]['delta']
                 content = delta.get('content', '') 
                 reasoning = delta.get('reasoning', '')
-                if reasoning:
+                if len(reasoning.strip()) and not 'think' in SHUTUP:
                     if not is_thinking:
                         print("<think>")
                         is_thinking = True

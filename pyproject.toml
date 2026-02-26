@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "llcat"
-version = "0.13.9"
+version = "0.13.10"
 description = "/usr/bin/cat for LLMs"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -26,7 +26,8 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
-    "requests"
+    "requests",
+    "curlify"
 ]
 
 [project.urls]

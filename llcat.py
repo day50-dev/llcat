@@ -320,12 +320,12 @@ def err_out(what="general", message="", obj=None, code=1, exit=True):
         
         fulldump={'data': obj_json, 'level': level, 'class': what, 'message': message, 'tb': tb}
 
-
+        out =''
         # print(fulldump)
         if LOGSTYLE == 'md':
             if what == 'toolcall':
                 if message == 'request':
-                    out=f'> **{obj_json.get('function').get('name')}**' + f'\n*{json.dumps(obj_json.get('function').get('arguments'))}*'
+                    out=f"> **{obj_json.get('function').get('name')}**" + f"\n*{json.dumps(obj_json.get('function').get('arguments'))}*"
 
                 elif message == 'result':
                     out = f'>\n**result:**\n{json.dumps(obj_json, indent=2)}\n'

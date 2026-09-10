@@ -716,7 +716,12 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
 
     # Conversation
     convo_file = args.conversationro or args.conversation or None
-    messages = safeopen(convo_file, can_create=True) if convo_file else []
+    if convo_file and convo_file[0] == '@':
+        messages = json.loads(stringfile(convo_file))
+        # we can't write that back
+        args.conversation = None
+    else:
+        messages = safeopen(convo_file, can_create=True) if convo_file else []
 
     # Tools
     tools = None

@@ -1,7 +1,6 @@
 [
   {
     "type": "function",
-    "disabled": true,
     "function": {
       "name": "list_mp3s",
       "description": "List all MP3 files in the music library",

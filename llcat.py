@@ -823,7 +823,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                         if not args.raw:
                             print(content, end='', flush=True)
                         assistant['content'] += content
-                    
+
                     # so some models keep the id consistent for partials and others just
                     # send a 0 down the pipe to mean "same as last time". 
                     if tool_calls:
@@ -835,14 +835,15 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
 
                             if 'function' in tc:
                                 for arg in ['name', 'arguments']:
-                                    if arg in tc['function']:
-                                        tool_call_dict[tool_id]['function'][arg] += tc['function'][arg]
+                                    if tc['function'].get(arg):
+                                        tool_call_dict[tool_id]['function'][arg] += str(tc['function'][arg])
 
                     if stopFlag == True:
                         stopFlag = False
                         break
 
                 except Exception as ex:
+                    print(ex)
                     err_out(what="toolcall", message=traceback.format_exc(), obj=req)
 
             tool_call_list = list(tool_call_dict.values())

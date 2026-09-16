@@ -727,6 +727,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     tools = None
     if args.tool_file:
         tools = safeopen(args.tool_file)
+        tools = list(filter(lambda x: not x.get('disabled'), tools))
         for tool in tools:
             # we demand the tool program to be executable
             MCP_REF[tool['function']['name']] = ({'command':args.tool_program,'args':[]}, tool['function']['name'])

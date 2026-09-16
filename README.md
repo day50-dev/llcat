@@ -339,6 +339,23 @@ There's a basic extension on MCP here. You can explicity disable an MCP server b
 }
 ```
 
+You can also set this in a tool function definition, for instance:
+
+```json
+  {
+    "type": "function",
+    "disabled" true,    << right here!
+    "function": {
+      "name": "list_mp3s",
+      "description": "List all MP3 files in the music library",
+      "parameters": {
+        ...
+      }
+    }
+  },
+```
+
+
 ### MCPCat
 MCP can be simple with simple tools. There's one included here. `mcpcat` is a 22 line Bash script. 
 

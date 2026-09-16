@@ -835,7 +835,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
 
                             if 'function' in tc:
                                 for arg in ['name', 'arguments']:
-                                    if tc['function'].get(arg):
+                                    if tc['function'].get(arg) != None:
                                         tool_call_dict[tool_id]['function'][arg] += str(tc['function'][arg])
 
                     if stopFlag == True:
@@ -846,7 +846,24 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                     print(ex)
                     err_out(what="toolcall", message=traceback.format_exc(), obj=req)
 
-            tool_call_list = list(tool_call_dict.values())
+            tool_call_list = []
+            entry = {}
+            isFirst = True
+            for v in tool_call_dict.values():
+                if entry == {}:
+                    entry = v
+
+                if not isFirst:
+                    if v.get('function').get('name'):
+                        tool_call_list.append(entry)
+                        entry = v
+                    else:
+                        entry['function']['arguments'] += v.get('function').get('arguments')
+
+                isFirst = False
+
+            if entry != {}:
+                tool_call_list.append(entry)
 
             # this is the calling, after the construction is ostensibly done
             for tc in tool_call_list:

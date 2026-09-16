@@ -1,7 +1,7 @@
 <p align="center">
 <img width="238" alt="llcat" src="https://github.com/user-attachments/assets/c161862d-8a8e-4753-a6eb-8a3b67f760b0" />
 <br/> <strong>/usr/bin/cat for LLMs</strong>
-<br/> <a href=https://pypi.org/project/llcat><img src=https://badge.fury.io/py/llcat.svg/></a> <img src=https://img.shields.io/badge/License-MIT-yellow.svg />
+<br/> <a href=https://pypi.org/project/llcat><img src=https://badge.fury.io/py/llcat.svg/></a> <img src=https://img.shields.io/badge/License-MIT-yellow.svg /> <a href=https://pepy.tech/projects/llcat><img src=https://static.pepy.tech/badge/llcat/week></a>
 </p>
 <hr>
 

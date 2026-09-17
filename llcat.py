@@ -770,6 +770,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
         while True:
             r = safecall(f'{base_url}/v1/chat/completions', req, headers)
             tool_call_list = []
+            current_tc = None
             tool_call_dict = {}
 
             is_thinking = False
@@ -829,41 +830,25 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                     if tool_calls:
                         for tc in tool_calls:
                             tool_id = tc.get('id',tool_id)
-
-                            if tool_id not in tool_call_dict:
-                                tool_call_dict[tool_id] = {'id': tool_id, 'type': 'function', 'function': {'name': '', 'arguments': ''}}
-
                             if 'function' in tc:
-                                for arg in ['name', 'arguments']:
-                                    if tc['function'].get(arg) != None:
-                                        tool_call_dict[tool_id]['function'][arg] += str(tc['function'][arg])
+                                tcfn = tc['function']
+                                if tcfn.get('name') and len(str(tcfn.get('name'))) >0:
+                                    if current_tc:
+                                        tool_call_list.append(current_tc)
+                                    current_tc = {'id': tool_id, 'type': 'function', 'function': {'name': tcfn.get('name'), 'arguments': ''}}
+
+                                if tcfn.get('arguments') != None:
+                                    current_tc['function']['arguments'] += str(tcfn['arguments'])
 
                     if stopFlag == True:
                         stopFlag = False
                         break
 
                 except Exception as ex:
-                    print(ex)
                     err_out(what="toolcall", message=traceback.format_exc(), obj=req)
 
-            tool_call_list = []
-            entry = {}
-            isFirst = True
-            for v in tool_call_dict.values():
-                if entry == {}:
-                    entry = v
-
-                if not isFirst:
-                    if v.get('function').get('name'):
-                        tool_call_list.append(entry)
-                        entry = v
-                    else:
-                        entry['function']['arguments'] += v.get('function').get('arguments')
-
-                isFirst = False
-
-            if entry != {}:
-                tool_call_list.append(entry)
+            if current_tc:
+                tool_call_list.append(current_tc)
 
             # this is the calling, after the construction is ostensibly done
             for tc in tool_call_list:

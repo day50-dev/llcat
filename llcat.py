@@ -265,8 +265,11 @@ def discover_tools(server_config):
     return res.get('tools')
 
 def call_tool(server_config, tool_name, arguments):
-    if type(arguments) is str:
-        arguments = json.loads(arguments)
+    try:
+        if type(arguments) is str:
+            arguments = json.loads(arguments)
+    except:
+        pass
 
     proc, rpc = mcp_start(server_config)
     rpc("tools/call", {"name": tool_name, "arguments": arguments})

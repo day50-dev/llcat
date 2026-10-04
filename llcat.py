@@ -805,7 +805,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                         delta = chunk['choices'][0]['delta']
 
                         content = delta.get('content', '') 
-                        reasoning = delta.get('reasoning', delta.get('reasoning_content', '')) or ''
+                        reasoning = delta.get('reasoning', delta.get('reasoning_content', delta.get('thinking')) ) or ''
                         tool_calls = delta.get('tool_calls', [])
 
                     if (len(assistant.get('reasoning', '')) > 0 or len(reasoning.strip())) and not 'think' in SHUTUP and reasoning:

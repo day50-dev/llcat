@@ -355,7 +355,7 @@ def model_info(args, base_url, headers):
 
     try:
         resp = r.json()
-        models = resp.get('data') or resp.get('models')
+        models = resp.get('data') or resp.get('models') or []
 
         if '*' in qmodel:
             import fnmatch

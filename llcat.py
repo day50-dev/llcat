@@ -553,6 +553,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     # We want to show things in the order of importance
     parser.add_argument('-su', '-u', '--server_url',        metavar='[@]SERVERURL', help='server URL (e.g., http://::1:8080). Also supports MAS format')
     parser.add_argument('-sk', '-k', '--server_key',        metavar='[@]SERVERKEY', help='server API key for authorization')
+    parser.add_argument('-ck', '-C', '--cookie',        metavar='[@]COOKIE', help='cookie header to send (e.g., "session=abc123")')
     parser.add_argument('-to', '--timeout',     type=str,     help='timeout in seconds for the read')
     parser.add_argument('-pr', '--proto', default='auto',   help='protocol to use (ollama, llama.cpp, openai, auto)')
 
@@ -670,6 +671,9 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
 
     if args.server_key:
         headers['Authorization'] = f'Bearer {stringfile(args.server_key)}'
+
+    if args.cookie:
+        headers['Cookie'] = stringfile(args.cookie)
 
     if args.ps:
         res = safecall(base_url=f'{server}/api/ps', headers=headers, what="get")

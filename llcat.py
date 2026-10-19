@@ -771,9 +771,9 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     parser.add_argument('-sk', '-k', '--server_key',        metavar='[@]SERVERKEY', help='server API key for authorization')
     parser.add_argument('-ck', '-C', '--cookie',        metavar='[@]COOKIE', help='cookie header to send (e.g., "session=abc123")')
     parser.add_argument('-to', '--timeout',     type=str,     help='timeout in seconds for the read')
-    parser.add_argument('-pr', '--proto', default='auto',   help='protocol to use (ollama, llama.cpp, openai, anthropic, auto)')
+    parser.add_argument('-pr', '--proto', default=None, help='protocol to use (ollama, llama.cpp, openai, anthropic, auto)')
 
-    parser.add_argument('-m',  '--model', default='_any_', metavar='[@]MODEL', nargs='?', help='model to use (or list models if no value)')
+    parser.add_argument('-m',  '--model', default=None, metavar='[@]MODEL', nargs='?', help='model to use (or list models if no value)')
     parser.add_argument('-s',  '--system', metavar='[@]SYSTEM', help='system prompt')
     parser.add_argument('-a',  '--attach', action='append', help='attach file(s)')
 
@@ -785,7 +785,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     parser.add_argument('-mf', '--mcp',           help='MCP file to use')
     parser.add_argument('-tp', '--tool_program',  help='program to execute tool calls')
     parser.add_argument('-tf', '--tool_file',     help='JSON file with tool definitions')
-    parser.add_argument('-l', '--logstyle', default='md', choices=['md','json'], help='logging style')
+    parser.add_argument('-l', '--logstyle', default=None, choices=['md','json'], help='logging style')
 
     parser.add_argument('-ps', '--ps',       action='store_true', help='currently running model (if supported)')
     parser.add_argument('-bq', '--be_quiet', action='append',     help='make it shutup about things')
@@ -815,6 +815,10 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                     if not cval:
                         setattr(args, k, v)
             args.user_prompt = args.user_prompt[1:]
+
+    for _k, _v in [['proto','auto'],['model','_any_'],['logstyle','md']]:
+        if getattr(args, _k) is None:
+            setattr(args, _k, _v)
 
     if not args.server_url and len(args.user_prompt) > 0:
         args.server_url = args.user_prompt[0]

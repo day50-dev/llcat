@@ -368,9 +368,13 @@ def model_info(args, base_url, headers):
             if args.info or (qmodel in [model['id'], '*'] and len(model['id'])):
                 params = model.get('supported_parameters')
                 if not params:
-                    r = safecall(base_url=f'{base_url}/api/show', req={"model":model.get('id')}, headers=headers)
-                    model_info = r.json()
-                    params = model_info.get('capabilities')
+                    if args.proto == 'anthropic':
+                        # /api/show is an openrouter-ism; anthropic's model list has no capabilities
+                        params = []
+                    else:
+                        r = safecall(base_url=f'{base_url}/api/show', req={"model":model.get('id')}, headers=headers)
+                        model_info = r.json()
+                        params = model_info.get('capabilities')
                 else:
                     model_info = model
 
@@ -411,6 +415,199 @@ def tool_gen(res):
                 data += line
     if isJSON:
         yield json.loads(data)
+
+def anthropic_convert_blocks(blocks):
+    """Convert openai-style content blocks (as built by create_content_with_attachments)
+    into anthropic content blocks."""
+    out = []
+    for b in blocks:
+        bt = b.get('type')
+        if bt == 'text':
+            out.append({'type': 'text', 'text': b.get('text', '')})
+        elif bt == 'image_url':
+            url = b.get('image_url')
+            if isinstance(url, dict):
+                url = url.get('url', '')
+            if url.startswith('data:'):
+                head, _, payload = url.partition(',')
+                mt = head[5:].split(';')[0]
+                out.append({'type': 'image', 'source': {'type': 'base64', 'media_type': mt, 'data': payload}})
+            else:
+                out.append({'type': 'image', 'source': {'type': 'url', 'url': url}})
+        elif bt == 'file':
+            f = b.get('file') or {}
+            fd = f.get('file_data') or ''
+            if fd.startswith('data:'):
+                head, _, payload = fd.partition(',')
+                mt = head[5:].split(';')[0]
+                out.append({'type': 'document', 'source': {'type': 'base64', 'media_type': mt, 'data': payload}})
+        elif bt == 'document':
+            out.append(b)
+
+    return out
+
+def anthropic_convert_messages(messages):
+    """Convert openai-style messages (llcat's native conversation format) into the
+    anthropic /v1/messages format. Returns (system, messages)."""
+    system = []
+    msgs = []
+    for m in messages:
+        role = m.get('role')
+        content = m.get('content', '')
+
+        if role == 'system':
+            system.append(content if isinstance(content, str) else json.dumps(content))
+            continue
+
+        if role == 'tool':
+            block = {
+                'type': 'tool_result',
+                'tool_use_id': m.get('tool_call_id'),
+                'content': content if isinstance(content, str) else json.dumps(content)
+            }
+            # tool results go back as user turns
+            if msgs and msgs[-1]['role'] == 'user' and isinstance(msgs[-1]['content'], list):
+                msgs[-1]['content'].append(block)
+            else:
+                msgs.append({'role': 'user', 'content': [block]})
+            continue
+
+        if role == 'assistant':
+            blocks = []
+            if isinstance(content, str):
+                if content:
+                    blocks.append({'type': 'text', 'text': content})
+            elif isinstance(content, list):
+                blocks.extend(anthropic_convert_blocks(content))
+            for tc in m.get('tool_calls') or []:
+                fn = tc.get('function') or {}
+                a = fn.get('arguments')
+                if isinstance(a, str):
+                    try:
+                        a = json.loads(a)
+                    except:
+                        a = {}
+                blocks.append({'type': 'tool_use', 'id': tc.get('id'), 'name': fn.get('name'), 'input': a or {}})
+            if not blocks:
+                # anthropic rejects empty content
+                blocks.append({'type': 'text', 'text': ' '})
+            msgs.append({'role': 'assistant', 'content': blocks})
+            continue
+
+        # user (and anything we don't know defaults to user)
+        if isinstance(content, list):
+            msgs.append({'role': 'user', 'content': anthropic_convert_blocks(content)})
+        else:
+            msgs.append({'role': 'user', 'content': content if content else ' '})
+
+    # anthropic demands alternating roles; merge consecutive same-role messages
+    merged = []
+    for m in msgs:
+        if merged and merged[-1]['role'] == m['role']:
+            prev = merged[-1]['content']
+            if isinstance(prev, str):
+                prev = [{'type': 'text', 'text': prev}]
+            cur = m['content'] if isinstance(m['content'], list) else [{'type': 'text', 'text': m['content']}]
+            merged[-1]['content'] = prev + cur
+        else:
+            merged.append(m)
+
+    if merged and merged[0]['role'] != 'user':
+        merged.insert(0, {'role': 'user', 'content': [{'type': 'text', 'text': ' '}]})
+
+    sys_text = '\n'.join(s for s in system if s)
+    return (sys_text if sys_text else None), merged
+
+def anthropic_tools(tools):
+    """Convert openai-style tool definitions into anthropic tool definitions."""
+    out = []
+    for t in tools:
+        fn = t.get('function', t)
+        out.append({
+            'name': fn.get('name'),
+            'description': fn.get('description') or '',
+            'input_schema': fn.get('parameters') or {'type': 'object', 'properties': {}},
+        })
+    return out
+
+def anthropic_event(ev, etype):
+    """Yield openai-style chunks from a single anthropic event, so the shared
+    response loop can consume both protocols."""
+    t = ev.get('type') or etype
+
+    if t == 'error':
+        err_out(what='response', message=json.dumps(ev.get('error') or ev))
+        return
+
+    if t == 'content_block_start':
+        block = ev.get('content_block') or {}
+        if block.get('type') == 'tool_use':
+            yield {'choices': [{'delta': {'tool_calls': [{'id': block.get('id'), 'function': {'name': block.get('name')}}]}}]}
+        return
+
+    if t == 'content_block_delta':
+        d = ev.get('delta') or {}
+        dt = d.get('type')
+        if dt == 'text_delta':
+            yield {'choices': [{'delta': {'content': d.get('text', '')}}]}
+        elif dt == 'thinking_delta':
+            yield {'choices': [{'delta': {'reasoning': d.get('thinking', '')}}]}
+        elif dt == 'input_json_delta':
+            yield {'choices': [{'delta': {'tool_calls': [{'function': {'arguments': d.get('partial_json', '')}}]}}]}
+        return
+
+    if t == 'message':
+        # non-streaming response: flatten content blocks into a delta
+        content = ''
+        reasoning = ''
+        tool_calls = []
+        for block in ev.get('content') or []:
+            bt = block.get('type')
+            if bt == 'text':
+                content += block.get('text', '')
+            elif bt == 'thinking':
+                reasoning += block.get('thinking', '')
+            elif bt == 'tool_use':
+                tool_calls.append({'id': block.get('id'), 'function': {'name': block.get('name'), 'arguments': json.dumps(block.get('input', {}))}})
+
+        d = {'content': content}
+        if reasoning:
+            d['reasoning'] = reasoning
+        if tool_calls:
+            d['tool_calls'] = tool_calls
+        yield {'choices': [{'delta': d}]}
+        yield {'choices': [{'finish_reason': 'stop'}]}
+        return
+
+def anthropic_gen(res, raw=False):
+    """Translate an anthropic /v1/messages response (streamed sse or a single json
+    body) into openai-style chunks."""
+    event = None
+    isJSON = False
+    data = ''
+    for line in res.iter_lines():
+        if not line:
+            continue
+        line = line.decode('utf-8')
+        logging.debug(f"response: {line}")
+        if isJSON:
+            data += line
+            continue
+        if line.startswith('event: '):
+            event = line[7:]
+        elif line.startswith('data: '):
+            ev = json.loads(line[6:])
+            if raw:
+                print(f"{event} {json.dumps(ev)}", flush=True)
+            yield from anthropic_event(ev, event or 'message')
+        elif line.startswith('{'):
+            isJSON = True
+            data += line
+    if isJSON:
+        ev = json.loads(data)
+        if raw:
+            print(json.dumps(ev), flush=True)
+        yield from anthropic_event(ev, 'message')
 
 def stringfile(instr, MustExist=False):
     res = instr
@@ -463,6 +660,25 @@ def base_request(args, server):
         eb = json.loads(stringfile(args.extra_body or "{}"))
     except Exception as ex:
         err_out(what="parsing", message=f"{args.extra_body} is unparsable json: {ex}", code=126)
+
+    if args.proto == 'anthropic':
+        # the anthropic protocol is structurally different: max_tokens is
+        # mandatory, system is a top-level field, thinking is a parameter
+        req = {
+            'model': stringfile(args.model),
+            'stream': not args.no_stream,
+            **eb
+        }
+        req.setdefault('max_tokens', 8192)
+
+        # https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
+        if args.no_think:
+            req['thinking'] = {'type': 'disabled'}
+
+        if args.schema:
+            logging.warning("schema is not supported by the anthropic protocol; ignoring")
+
+        return req
 
     req = {
         'model': stringfile(args.model),
@@ -555,7 +771,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     parser.add_argument('-sk', '-k', '--server_key',        metavar='[@]SERVERKEY', help='server API key for authorization')
     parser.add_argument('-ck', '-C', '--cookie',        metavar='[@]COOKIE', help='cookie header to send (e.g., "session=abc123")')
     parser.add_argument('-to', '--timeout',     type=str,     help='timeout in seconds for the read')
-    parser.add_argument('-pr', '--proto', default='auto',   help='protocol to use (ollama, llama.cpp, openai, auto)')
+    parser.add_argument('-pr', '--proto', default='auto',   help='protocol to use (ollama, llama.cpp, openai, anthropic, auto)')
 
     parser.add_argument('-m',  '--model', default='_any_', metavar='[@]MODEL', nargs='?', help='model to use (or list models if no value)')
     parser.add_argument('-s',  '--system', metavar='[@]SYSTEM', help='system prompt')
@@ -670,7 +886,12 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     }
 
     if args.server_key:
-        headers['Authorization'] = f'Bearer {stringfile(args.server_key)}'
+        key = stringfile(args.server_key)
+        if args.proto == 'anthropic':
+            headers['x-api-key'] = key
+            headers['anthropic-version'] = '2023-06-01'
+        else:
+            headers['Authorization'] = f'Bearer {key}'
 
     if args.cookie:
         headers['Cookie'] = stringfile(args.cookie)
@@ -758,11 +979,22 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
 
     messages.append({'role': 'user', 'content': message_content})
 
-    req = base_request(args, server)
-    req['messages'] = messages
+    def build_req():
+        req = base_request(args, server)
+        if args.proto == 'anthropic':
+            system, amessages = anthropic_convert_messages(messages)
+            if system:
+                req['system'] = system
+            req['messages'] = amessages
+            if tools:
+                req['tools'] = anthropic_tools(tools)
+        else:
+            req['messages'] = messages
+            if tools:
+                req['tools'] = tools
+        return req
 
-    if tools:
-        req['tools'] = tools
+    req = build_req()
 
     # The actual call
     assistant = {
@@ -774,16 +1006,17 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
 
     stopFlag = False
     try:
+        endpoint = f'{base_url}/v1/messages' if args.proto == 'anthropic' else f'{base_url}/v1/chat/completions'
         while True:
-            r = safecall(f'{base_url}/v1/chat/completions', req, headers)
+            r = safecall(endpoint, req, headers)
             tool_call_list = []
             current_tc = None
             tool_call_dict = {}
 
             is_thinking = False
             tool_id = 0
-            for chunk in tool_gen(r):
-                if args.raw:
+            for chunk in (anthropic_gen(r, raw=args.raw) if args.proto == 'anthropic' else tool_gen(r)):
+                if args.raw and args.proto != 'anthropic':
                     print(chunk)
                 try:
                     if 'choices' not in chunk:
@@ -914,10 +1147,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                     'content': result
                 })
             
-            req = base_request(args, server)
-            req['messages'] = messages
-            if tools:
-                req['tools'] = tools
+            req = build_req()
 
             if len(tool_call_list) == 0:
                 break

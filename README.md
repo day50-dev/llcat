@@ -127,6 +127,12 @@ Sure. What about a different protocol, say ollama?
 
 `uvx llcat localhost:11434 -m '*qwen3*' --info | jq .`
 
+What about the native Anthropic protocol?
+
+`uvx llcat -pr anthropic -k @key.txt api.anthropic.com -m claude-sonnet-4-5 'say hi'`
+
+The `--proto anthropic` flag switches llcat to Anthropic's `/v1/messages` wire format: `x-api-key` auth, top-level `system`, `max_tokens`, block-based content, and `tool_use`/`tool_result` turns. Conversations, tool files and everything else stay in llcat's native (OpenAI-style) format and are translated on the fly, so a conversation recorded against one protocol replays against the other.
+
 All the abstraction without those pesky leaks.
 
 There's also support for schemas, dry-runs, expressing the calls as raw curls, adding body parameters (such as top_p or temperature), custom timeouts, and customizing thinking or streaming. 
@@ -424,7 +430,8 @@ options:
   -to TIMEOUT, --timeout TIMEOUT
                         timeout in seconds for the read
   -pr PROTO, --proto PROTO
-                        protocol to use (ollama, llama.cpp, openai, auto)
+                        protocol to use (ollama, llama.cpp, openai, anthropic,
+                        auto)
   -m [[@]MODEL], --model [[@]MODEL]
                         model to use (or list models if no value)
   -s [@]SYSTEM, --system [@]SYSTEM

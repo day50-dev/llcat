@@ -799,22 +799,20 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
     parser.add_argument('--dry',             action='store_true', help="dry run")
     parser.add_argument('--version',         action='version', version='%(prog)s ' + VERSION)
     parser.add_argument('--info',            nargs='?', const='caps', help='get the info for a model')
-    parser.add_argument('--save',            help='save an invocation to a reusable JSON file. Supply it as a bare @argument to reuse')
+    parser.add_argument('--save',            help='save an invocation to a reusable JSON file.')
+    parser.add_argument('--load',            help='load an invocation from a save')
 
     parser.add_argument('user_prompt',       metavar='[@]user_prompt', nargs='*', help='your prompt. If you omit the server_url, the first argument will be the server')
     args = parser.parse_args()
 
-    if len(args.user_prompt) > 0:
-        # this allows for shareable configs
-        if args.user_prompt[0].startswith('@'):
-            config = stringfile(args.user_prompt[0], MustExist=True)
-            if config:
-                config = json.loads(config)
-                for k,v in config.items():
-                    cval = getattr(args, k)
-                    if not cval:
-                        setattr(args, k, v)
-            args.user_prompt = args.user_prompt[1:]
+    if args.load:
+        config = stringfile(args.load, MustExist=True)
+        if config:
+            config = json.loads(config)
+            for k,v in config.items():
+                cval = getattr(args, k)
+                if not cval:
+                    setattr(args, k, v)
 
     for _k, _v in [['proto','auto'],['model','_any_'],['logstyle','md']]:
         if getattr(args, _k) is None:

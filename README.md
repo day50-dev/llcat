@@ -102,7 +102,7 @@ Also note that opening parameter `--save invocation.json`. If you open `invocati
 So to re-invoke this set of parameters you can just do
 
 ```shell
-llcat @invocation.json { ... parameters you want to override ... }
+llcat --load @invocation.json { ... parameters you want to override ... }
 ```
 
 There's that `@` again, this time providing completely portable invocations as JSON.
@@ -399,13 +399,15 @@ There's ways of doing the network transports with this script as well. All you n
 Now it's your turn. 
 
 ```
-usage: llcat [-h] [-su [@]SERVERURL] [-sk [@]SERVERKEY] [-to TIMEOUT]
-             [-pr PROTO] [-m [[@]MODEL]] [-s [@]SYSTEM] [-a ATTACH]
-             [-c CONVERSATION] [-cr CONVERSATIONRO] [-eb [@]EXTRABODY]
-             [-sc [@]SCHEMA] [-mf MCP] [-tp TOOL_PROGRAM] [-tf TOOL_FILE]
-             [-l {md,json}] [-ps] [-bq BE_QUIET] [-mt] [-nt] [-ns] [-nw]
-             [-f] [--curlify] [--raw] [--dry] [--version] [--info [INFO]]
-             [--save SAVE] [[@]user_prompt ...]
+usage: llcat [-h] [-su [@]SERVERURL] [-sk [@]SERVERKEY] [-ck [@]COOKIE]
+             [-to TIMEOUT] [-pr PROTO] [-m [[@]MODEL]] [-s [@]SYSTEM]
+             [-a ATTACH] [-c CONVERSATION] [-cr CONVERSATIONRO]
+             [-eb [@]EXTRABODY] [-sc [@]SCHEMA] [-mf MCP]
+             [-tp TOOL_PROGRAM] [-tf TOOL_FILE] [-l {md,json}] [-ps]
+             [-bq BE_QUIET] [-mt] [-nt] [-ns] [-nw] [-f] [--curlify]
+             [--raw] [--dry] [--version] [--info [INFO]] [--save SAVE]
+             [--load LOAD]
+             [[@]user_prompt ...]
 
 llcat is /usr/bin/cat for LLMs. 
 
@@ -422,40 +424,40 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -su [@]SERVERURL, -u [@]SERVERURL, --server_url [@]SERVERURL
+  -su, -u, --server_url [@]SERVERURL
                         server URL (e.g., http://::1:8080). Also supports MAS
                         format
-  -sk [@]SERVERKEY, -k [@]SERVERKEY, --server_key [@]SERVERKEY
+  -sk, -k, --server_key [@]SERVERKEY
                         server API key for authorization
-  -to TIMEOUT, --timeout TIMEOUT
+  -ck, -C, --cookie [@]COOKIE
+                        cookie header to send (e.g., "session=abc123")
+  -to, --timeout TIMEOUT
                         timeout in seconds for the read
-  -pr PROTO, --proto PROTO
-                        protocol to use (ollama, llama.cpp, openai, anthropic,
+  -pr, --proto PROTO    protocol to use (ollama, llama.cpp, openai, anthropic,
                         auto)
-  -m [[@]MODEL], --model [[@]MODEL]
+  -m, --model [[@]MODEL]
                         model to use (or list models if no value)
-  -s [@]SYSTEM, --system [@]SYSTEM
+  -s, --system [@]SYSTEM
                         system prompt
-  -a ATTACH, --attach ATTACH
-                        attach file(s)
-  -c CONVERSATION, --conversation CONVERSATION
+  -a, --attach ATTACH   attach file(s)
+  -c, --conversation CONVERSATION
                         conversation history file (r/w)
-  -cr CONVERSATIONRO, --conversationro CONVERSATIONRO
+  -cr, --conversationro CONVERSATIONRO
                         the readonly conversation input (ro)
-  -eb [@]EXTRABODY, --extra_body [@]EXTRABODY
+  -eb, --extra_body [@]EXTRABODY
                         JSON to add to the body, such as max_tokens or
                         temperature
-  -sc [@]SCHEMA, --schema [@]SCHEMA
+  -sc, --schema [@]SCHEMA
                         set a schema to force structured output
-  -mf MCP, --mcp MCP    MCP file to use
-  -tp TOOL_PROGRAM, --tool_program TOOL_PROGRAM
+  -mf, --mcp MCP        MCP file to use
+  -tp, --tool_program TOOL_PROGRAM
                         program to execute tool calls
-  -tf TOOL_FILE, --tool_file TOOL_FILE
+  -tf, --tool_file TOOL_FILE
                         JSON file with tool definitions
-  -l {md,json}, --logstyle {md,json}
+  -l, --logstyle {md,json}
                         logging style
   -ps, --ps             currently running model (if supported)
-  -bq BE_QUIET, --be_quiet BE_QUIET
+  -bq, --be_quiet BE_QUIET
                         make it shutup about things
   -mt, --md_tools       make tool call output markdown
   -nt, --no_think       disable thinking
@@ -467,8 +469,8 @@ options:
   --dry                 dry run
   --version             show program's version number and exit
   --info [INFO]         get the info for a model
-  --save SAVE           save an invocation to a reusable JSON file. Supply it
-                        as a bare @argument to reuse
+  --save SAVE           save an invocation to a reusable JSON file.
+  --load LOAD           load an invocation from a save
 ```
 
 We're excited to see what you build.

@@ -823,7 +823,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
         args.user_prompt = args.user_prompt[1:]
 
     # The user said auto so this is what we mean by auto.
-    if 'api.anthropic.com' in args.server_url.lower() and args.proto == 'auto':
+    if args.server_url and 'api.anthropic.com' in args.server_url.lower() and args.proto == 'auto':
         args.proto = 'anthropic'
 
     # We support the format llcat <endpoint> <prompt> which is the simplest

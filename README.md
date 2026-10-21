@@ -102,10 +102,8 @@ Also note that opening parameter `--save invocation.json`. If you open `invocati
 So to re-invoke this set of parameters you can just do
 
 ```shell
-llcat --load @invocation.json { ... parameters you want to override ... }
+llcat --load invocation.json { ... parameters you want to override ... }
 ```
-
-There's that `@` again, this time providing completely portable invocations as JSON.
 
 ---
 

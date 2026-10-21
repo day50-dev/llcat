@@ -13,7 +13,7 @@ Existing tools require you to pick from a provider boutique and a small list of 
 
 
 
-**llcat** is a solution to these problems: a general-purpose CLI-based OpenAI-compatible `/chat/completions` and Anthropic Messages API (`/v1/messages`) caller. It also works with Ollama, OpenRouter, sglang, vllm, llama.cpp and more. 
+**llcat** is a solution to these problems: a general-purpose CLI-based OpenAI-compatible `/chat/completions` and Anthropic Messages API (`/v1/messages`) caller. It also works with Ollama, OpenRouter, SGLang, vLLM, LocalAI, llama.cpp and more. 
 
 It has a rich syntax and supports a sophisticated set of features while keeping simple things easy. 
 

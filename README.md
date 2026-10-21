@@ -127,9 +127,13 @@ Sure. What about a different protocol, say ollama?
 
 What about the native Anthropic protocol?
 
-`uvx llcat -pr anthropic -k @key.txt api.anthropic.com -m claude-sonnet-4-5 'say hi'`
+`uvx llcat -pr anthropic -k @key.txt api.anthropic.com -m claude-sonnet-5-5 'say hi'`
 
 The `--proto anthropic` flag switches llcat to Anthropic's `/v1/messages` wire format: `x-api-key` auth, top-level `system`, `max_tokens`, block-based content, and `tool_use`/`tool_result` turns. Conversations, tool files and everything else stay in llcat's native (OpenAI-style) format and are translated on the fly, so a conversation recorded against one protocol replays against the other.
+
+You don't even need to specify the protocol, just leave it in auto mode, llcat will figure it out.
+
+`uvx llcat -k @key.txt -u api.anthropic.com -m claude-sonnet-5-5 'say hi'`
 
 All the abstraction without those pesky leaks.
 

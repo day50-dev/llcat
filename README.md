@@ -28,12 +28,12 @@ https://github.com/user-attachments/assets/a23dab58-e7d6-40aa-b595-5e9c895b073e
 > Not a pain with `llcat`! It's easy!
 >
 > <img width="709" alt="model-example" src="https://github.com/user-attachments/assets/61614548-32dd-42f0-9ea9-c007cf632d52" />
->
-> Copy and paste this. Go ahead!
->
-> ```shell
-> uvx llcat api.concentrate.ai -m | tr '\n' ','
-> ```
+
+Copy and paste this. Go ahead!
+
+```shell
+ uvx llcat api.concentrate.ai -m | tr '\n' ','
+```
 
 
 Think of `llcat` like cURL or cat for LLMs: a stateless, transparent, explicit, low-level, composable tool for scripting and glue.

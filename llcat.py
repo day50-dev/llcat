@@ -903,7 +903,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
         headers['Cookie'] = stringfile(args.cookie)
 
     if args.ps:
-        res = safecall(base_url=f'{server}/api/ps', headers=headers, what="get")
+        res = safecall(base_url=f'{base_url}/api/ps', headers=headers, what="get")
         if res:
             try:
                 res_json = res.json()

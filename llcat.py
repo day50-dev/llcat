@@ -814,7 +814,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                 if not cval:
                     setattr(args, k, v)
 
-    for _k, _v in [['proto','auto'],['model','_any_'],['logstyle','md']]:
+    for _k, _v in [['proto','auto'],['logstyle','md']]:
         if getattr(args, _k) is None:
             setattr(args, _k, _v)
 

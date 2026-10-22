@@ -1120,9 +1120,6 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                         if not isinstance(l_args, str):
                             l_args = json.dumps(l_args)
 
-                        else:
-                            i['function']['arguments'] += l_args
-
                 next_row['tool_calls'] = tool_call_list
 
                 # I think this is right, only on tool calls but I'm not sure.

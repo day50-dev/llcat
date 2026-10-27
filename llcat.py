@@ -1054,7 +1054,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                     if (len(assistant.get('reasoning', '')) > 0 or len(reasoning.strip())) and not 'think' in SHUTUP and reasoning:
                         if not is_thinking:
                             if not args.raw:
-                                print("<think>")
+                                print("<think>", end='')
                             is_thinking = True
 
                         assistant['reasoning'] += reasoning
@@ -1064,7 +1064,7 @@ They can also have line numbers @/like/this:0 or jq syntax @/like/this:.[0].fiel
                     elif content:
                         if is_thinking:
                             if not args.raw:
-                                print("\n</think>")
+                                print("</think>")
                             is_thinking = False
 
                         if not args.raw:
